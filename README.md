@@ -1,8 +1,7 @@
 # Dahl
 
-> Dahl 得名于 **Ole-Johan Dahl**（1931–2002）——Simula 语言共同发明者、面向对象编程的奠基人之一。
-> Simula 因后来者建基于它而被铭记；这个脚手架想做的也是同一件事：一块供你构建的地基，
-> 而不是一个交付即完的产品。
+> 得名于 **Ole-Johan Dahl**（1931–2002）——Simula 语言共同发明者、面向对象编程奠基人：
+> 他为现代编程打下地基，Dahl 为你的桌面应用打下地基。
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 ![Tauri 2](https://img.shields.io/badge/Tauri-2-24c8db)
@@ -84,7 +83,7 @@ src/
 │   └── error-boundary.tsx  # 全局错误边界
 ├── stores/          # zustand 全局状态（主题/语言，persist）
 ├── services/        # 数据请求层（TanStack Query + http 插件）
-├── i18n/            # react-i18next（en/zh，默认英文）
+├── i18n/            # react-i18next（zh/en，默认中文）
 ├── hooks/           # 通用 hooks
 ├── lib/             # 工具函数（cn 等）
 └── test/            # 测试 setup
@@ -123,7 +122,7 @@ Shell 执行、深链接监听。
 - **deep-link**：scheme 为 `dahl://`，dev 模式测试需先在系统注册 scheme
 - **毛玻璃**：macOS 下主窗口开启透明 + vibrancy（HudWindow 材质，`transparent: true`），
   侧边栏/内容区使用半透明背景（Windows/Linux 下为普通不透明窗口）
-- **主题/语言**：`src/stores/use-settings.ts` 控制，偏好持久化；默认英文
+- **主题/语言**：`src/stores/use-settings.ts` 控制，偏好持久化；默认中文
 - **提交**：husky + lint-staged 在 pre-commit 自动执行 lint/format
 
 ## 推荐 IDE

@@ -1,9 +1,8 @@
 # Dahl
 
-> Named after **Ole-Johan Dahl** (1931–2002) — co-inventor of the Simula language and
-> a founding figure of object-oriented programming. Simula is remembered for what others
-> built on it; this scaffold is our attempt at the same idea: a foundation you build on,
-> not a product you ship.
+> Named after **Ole-Johan Dahl** (1931–2002), co-inventor of Simula and a founding figure of
+> object-oriented programming: he laid the foundation of modern programming — Dahl lays the
+> foundation for your desktop app.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 ![Tauri 2](https://img.shields.io/badge/Tauri-2-24c8db)
@@ -85,7 +84,7 @@ src/
 │   └── error-boundary.tsx  # global error boundary
 ├── stores/          # zustand global state (theme/language, persisted)
 ├── services/        # data layer (TanStack Query + http plugin)
-├── i18n/            # react-i18next (en/zh, English default)
+├── i18n/            # react-i18next (zh/en, Chinese default)
 ├── hooks/           # shared hooks
 ├── lib/             # utilities (cn, etc.)
 └── test/            # test setup
@@ -125,7 +124,7 @@ Issues and PRs are welcome! Please read [CONTRIBUTING.en.md](CONTRIBUTING.en.md)
 - **Deep-link**: scheme is `dahl://`; register the scheme first when testing in dev mode
 - **Vibrancy**: the macOS main window uses transparency + vibrancy (`HudWindow` material, `transparent: true`);
   sidebar/content use translucent backgrounds (plain opaque windows on Windows/Linux)
-- **Theme/language**: controlled by `src/stores/use-settings.ts`, preferences persisted; English by default
+- **Theme/language**: controlled by `src/stores/use-settings.ts`, preferences persisted; Chinese by default
 - **Commits**: husky + lint-staged run lint/format automatically on pre-commit
 
 ## Recommended IDE

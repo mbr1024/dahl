@@ -10,7 +10,7 @@ automatically by [Changesets](https://github.com/changesets/changesets).
 
 - Initial scaffold: Tauri 2 + React 19 + TypeScript + Vite 7 + Tailwind CSS v4 + shadcn/ui
 - Routing (react-router v8), state management (zustand + TanStack Query), i18n
-  (react-i18next, en/zh, English by default)
+  (react-i18next, zh/en, Chinese by default)
 - 16 official Tauri plugins integrated: fs / dialog / store / window-state /
   clipboard-manager / global-shortcut / notification / single-instance / http /
   updater / log / autostart / sql(SQLite) / shell / deep-link / opener

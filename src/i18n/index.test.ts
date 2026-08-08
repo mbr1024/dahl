@@ -23,12 +23,12 @@ describe("i18n 资源", () => {
     expect(zhKeys.sort()).toEqual(enKeys.sort());
   });
 
-  it("默认语言为英文，切换中文后文案变化", async () => {
-    expect(i18n.language).toBe("en");
-    expect(i18n.t("nav.home")).toBe("Home");
-
-    await i18n.changeLanguage("zh");
+  it("默认语言为中文，切换英文后文案变化", async () => {
+    expect(i18n.language).toBe("zh");
     expect(i18n.t("nav.home")).toBe("首页");
+
+    await i18n.changeLanguage("en");
+    expect(i18n.t("nav.home")).toBe("Home");
     expect(i18n.t("home.title")).toBe("Dahl");
   });
 
