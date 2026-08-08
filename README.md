@@ -116,8 +116,8 @@ docs/                # 部署与运维文档（updater 配置等）
   `shell` / `deep-link` 的 `default` 权限集为空，使用对应 API 时需在
   `capabilities/` 显式加 `allow-*` 权限（排查：看 `src-tauri/gen/schemas/acl-manifests.json`）
 - **托盘**：左键单击切换主窗口显隐，右键菜单可退出；关闭窗口会隐藏到托盘
-- **updater**：`plugins.updater` 为开发占位配置（endpoint 为 example.com、公钥为
-  开发密钥对），正式发布前需替换为真实更新服务器与正式密钥，见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+- **updater**：以 GitHub Releases 作为更新源（endpoint 指向 `latest.json`），正式签名密钥已配置；
+  发布时 CI 自动签名并生成更新清单，完整流程见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 - **deep-link**：scheme 为 `dahl://`，dev 模式测试需先在系统注册 scheme
 - **主题/语言**：`src/stores/use-settings.ts` 控制，偏好持久化；默认英文（i18n 提供中英切换）
 - **提交**：husky + lint-staged 在 pre-commit 自动执行 lint/format

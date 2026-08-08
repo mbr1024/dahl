@@ -38,8 +38,8 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEEyMEFCNzg0NkRDNDJDMDcKUldRSExNUnRoTGNLb2p3KzcwQ011ZHZxZzJyUzJnMUZXb1FKWHFIMExISFJLWjN4cTJ2VFR6b0sK",
-      "endpoints": ["https://example.com/update/{{target}}/{{arch}}/{{current_version}}"]
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY0QzE1OTZGRkNEMzZDNEMKUldSTWJOUDhiMW5CWklWSTJTcnd1a3NRZ0VXTGh5U3UwcUEzbkRURE5ja2U4bFA0aDU3Z0RYZFMK",
+      "endpoints": ["https://github.com/mbr1024/dahl/releases/latest/download/latest.json"]
     },
     "deep-link": {
       "identifiers": ["dahl"]

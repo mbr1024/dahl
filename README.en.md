@@ -119,8 +119,8 @@ Issues and PRs are welcome! Please read [CONTRIBUTING.en.md](CONTRIBUTING.en.md)
   `sql` / `shell` / `deep-link` ship with empty `default` permission sets — add explicit `allow-*`
   entries in `capabilities/` when using them (debug: see `src-tauri/gen/schemas/acl-manifests.json`)
 - **Tray**: left-click toggles the main window, right-click menu quits; closing the window hides it to the tray
-- **Updater**: `plugins.updater` is a dev placeholder (example.com endpoint, dev key pair) — replace
-  with a real update server and signing keys before shipping, see [docs/DEPLOYMENT.en.md](docs/DEPLOYMENT.en.md)
+- **Updater**: GitHub Releases is the update source (endpoint points to `latest.json`); the production
+  signing key is configured, and CI signs and generates the update manifest on release — see [docs/DEPLOYMENT.en.md](docs/DEPLOYMENT.en.md)
 - **Deep-link**: scheme is `dahl://`; register the scheme first when testing in dev mode
 - **Vibrancy**: the macOS main window uses transparency + vibrancy (`HudWindow` material, `transparent: true`);
   sidebar/content use translucent backgrounds (plain opaque windows on Windows/Linux)

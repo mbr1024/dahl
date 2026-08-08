@@ -1,8 +1,8 @@
 # Deployment Guide: updater Setup & Release Pipeline
 
-> The `plugins.updater` config in `tauri.conf.json` is currently a **dev placeholder**
-> (example.com endpoint, dev key pair). You MUST replace it with a real update server and
-> production signing keys before shipping — otherwise clients can't pass signature verification.
+> Status: **production signing key generated and configured** — `tauri.conf.json` now has the real public key
+> and the endpoint points to GitHub Releases `latest.json`. The full setup process below is kept as reference
+> for rotating keys or switching update servers.
 
 ## 1. How It Works
 

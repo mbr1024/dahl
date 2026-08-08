@@ -1,7 +1,7 @@
 # 部署指南：updater 正式配置与发布流程
 
-当前 `tauri.conf.json` 中的 `plugins.updater` 是**开发占位配置**（endpoint 为 example.com、公钥为开发密钥对）。
-正式发布前必须替换为真实更新服务器与正式密钥，否则客户端无法通过签名校验。
+> 状态：**正式密钥已生成并配置**（`tauri.conf.json` 已填入正式公钥，endpoint 指向 GitHub Releases 的 `latest.json`）。
+> 下文完整记录配置原理与流程，供换密钥/换服务器时参考。
 
 ## 1. 工作原理
 
