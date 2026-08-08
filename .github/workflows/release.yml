@@ -32,7 +32,7 @@ jobs:
           workspaces: src-tauri
       - run: npm ci
       - name: Build and publish release assets
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # 正式签名密钥（见 docs/DEPLOYMENT.md）；未配置时跳过签名
