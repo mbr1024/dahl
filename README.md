@@ -1,7 +1,9 @@
 # Dahl
 
-> Dahl honors **Ole-Johan Dahl** — co-creator of Simula and a pioneer of object-oriented programming.
-> Just as he laid the foundation of modern programming, Dahl lays the foundation for your desktop app.
+> Named after **Ole-Johan Dahl** (1931–2002) — co-inventor of the Simula language and
+> a founding figure of object-oriented programming. Simula is remembered for what others
+> built on it; this scaffold is our attempt at the same idea: a foundation you build on,
+> not a product you ship.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 ![Tauri 2](https://img.shields.io/badge/Tauri-2-24c8db)

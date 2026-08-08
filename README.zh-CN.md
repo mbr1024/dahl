@@ -1,7 +1,8 @@
 # Dahl
 
-> 致敬 **Ole-Johan Dahl**——Simula 语言共同发明者、面向对象编程先驱。
-> 他奠定了现代编程的基石，Dahl 为你的桌面应用奠定基石。
+> Dahl 得名于 **Ole-Johan Dahl**（1931–2002）——Simula 语言共同发明者、面向对象编程的奠基人之一。
+> Simula 因后来者建基于它而被铭记；这个脚手架想做的也是同一件事：一块供你构建的地基，
+> 而不是一个交付即完的产品。
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 ![Tauri 2](https://img.shields.io/badge/Tauri-2-24c8db)
