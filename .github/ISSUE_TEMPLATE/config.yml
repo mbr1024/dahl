@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 提问 / 讨论
+    url: https://github.com/mbr1024/dahl/discussions
+    about: 使用建议、脚手架问题、最佳实践讨论请前往 GitHub Discussions

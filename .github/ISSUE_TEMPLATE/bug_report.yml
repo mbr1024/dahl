@@ -1,0 +1,56 @@
+name: Bug report
+description: 报告一个 Bug，帮助 Dahl 变得更好
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你花时间报告问题！请尽量提供完整信息，以便我们快速定位。
+  - type: textarea
+    id: describe
+    attributes:
+      label: 问题描述
+      description: 发生了什么？预期是什么？
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 如何复现这个问题？步骤越详细越好。
+      placeholder: |
+        1. 运行 `npm run tauri dev`
+        2. 点击「桌面能力」页的「系统通知」按钮
+        3. 观察到...
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: 操作系统
+      options:
+        - macOS
+        - Windows
+        - Linux
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      description: package.json 中的 version，或对应 tag
+      placeholder: "0.1.0"
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志与报错信息
+      description: 终端输出、devtools 报错、Rust panic 等
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 自查
+      options:
+        - label: 已确认使用的是最新版本（main 分支）
+        - label: 已搜索过现有 Issue，未发现相同问题
