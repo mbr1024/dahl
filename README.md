@@ -88,23 +88,22 @@ src/
 ├── lib/             # 工具函数（cn 等）
 └── test/            # 测试 setup
 src-tauri/
-├── src/lib.rs       # Rust 入口：插件注册、命令、托盘、毛玻璃
+├── src/lib.rs       # Rust 入口：插件注册、命令、托盘
 ├── capabilities/    # 权限配置（zero-trust，按需放开）
 └── tauri.conf.json  # 窗口、打包、updater、deep-link 配置
 e2e/                 # WebdriverIO 端到端测试（embedded WebDriver）
 docs/                # 部署与运维文档（updater 配置等）
-.github/workflows/   # CI：检查 / e2e / 三平台构建 / tag 发布
+.github/workflows/   # CI：检查 / e2e / Linux 构建（tag 发布时三平台）
 ```
 
 ## 已集成插件
 
-`fs`、`dialog`、`store`、`window-state`、`clipboard-manager`、`global-shortcut`、
+`fs`、`dialog`、`store`、`window-state`、`clipboard-manager`、
 `notification`、`single-instance`、`http`、`updater`、`log`、`autostart`、
 `sql`（SQLite）、`shell`、`deep-link`、`opener`
 
 示例页（侧边栏 → 桌面能力）演示：Rust 命令 invoke、文件对话框、剪贴板、
-系统通知、全局快捷键（Cmd/Ctrl+Shift+Y 切换窗口）、键值存储、SQLite 增删查、
-Shell 执行、深链接监听。
+系统通知、键值存储、SQLite 增删查、Shell 执行、深链接监听。
 
 ## 贡献
 
@@ -113,16 +112,14 @@ Shell 执行、深链接监听。
 
 ## 脚手架约定
 
-- **权限**：Tauri 2 默认全拒绝。`global-shortcut` / `clipboard-manager` / `sql` /
+- **权限**：Tauri 2 默认全拒绝。`clipboard-manager` / `sql` /
   `shell` / `deep-link` 的 `default` 权限集为空，使用对应 API 时需在
   `capabilities/` 显式加 `allow-*` 权限（排查：看 `src-tauri/gen/schemas/acl-manifests.json`）
 - **托盘**：左键单击切换主窗口显隐，右键菜单可退出；关闭窗口会隐藏到托盘
 - **updater**：`plugins.updater` 为开发占位配置（endpoint 为 example.com、公钥为
   开发密钥对），正式发布前需替换为真实更新服务器与正式密钥，见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 - **deep-link**：scheme 为 `dahl://`，dev 模式测试需先在系统注册 scheme
-- **毛玻璃**：macOS 下主窗口开启透明 + vibrancy（HudWindow 材质，`transparent: true`），
-  侧边栏/内容区使用半透明背景（Windows/Linux 下为普通不透明窗口）
-- **主题/语言**：`src/stores/use-settings.ts` 控制，偏好持久化；默认中文
+- **主题/语言**：`src/stores/use-settings.ts` 控制，偏好持久化；默认英文（i18n 提供中英切换）
 - **提交**：husky + lint-staged 在 pre-commit 自动执行 lint/format
 
 ## 推荐 IDE

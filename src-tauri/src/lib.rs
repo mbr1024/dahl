@@ -44,16 +44,6 @@ fn toggle_main_window(app: &tauri::AppHandle) {
 
 /// 系统托盘：左键单击切换主窗口显隐，右键菜单提供"退出"
 fn setup_tray(app: &mut tauri::App) -> tauri::Result<()> {
-    #[cfg(target_os = "macos")]
-    {
-        // macOS 毛玻璃效果（需窗口 transparent: true 才生效，见 tauri.conf.json；
-        // 失败时静默忽略，不影响其他平台）
-        use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
-        if let Some(win) = app.get_webview_window("main") {
-            let _ = apply_vibrancy(&win, NSVisualEffectMaterial::HudWindow, None, Some(16.0));
-        }
-    }
-
     // macOS 菜单栏规范是 monochrome template image（系统自动按深浅色反色）
     static TRAY_ICON: &[u8] = include_bytes!("../icons/tray.png");
     let img = image::load_from_memory(TRAY_ICON)
@@ -119,7 +109,6 @@ pub fn run() {
             toggle_main_window(app);
         }))
         .plugin(tauri_plugin_notification::init())
-        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_window_state::Builder::new().build())
         .plugin(tauri_plugin_store::Builder::new().build())

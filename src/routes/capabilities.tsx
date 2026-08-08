@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { getCurrentWindow } from "@tauri-apps/api/window";
 import { open, message } from "@tauri-apps/plugin-dialog";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 import { readText, writeText } from "@tauri-apps/plugin-clipboard-manager";
@@ -9,7 +8,6 @@ import {
   requestPermission,
   sendNotification,
 } from "@tauri-apps/plugin-notification";
-import { isRegistered, register, unregister } from "@tauri-apps/plugin-global-shortcut";
 import { load } from "@tauri-apps/plugin-store";
 import { info } from "@tauri-apps/plugin-log";
 import Database from "@tauri-apps/plugin-sql";
@@ -26,9 +24,6 @@ interface SystemInfo {
   family: string;
   exe: string;
 }
-
-/** 快捷操作：Cmd/Ctrl+Shift+Y 切换主窗口显隐 */
-const SHORTCUT = "CommandOrControl+Shift+Y";
 
 function Section({
   title,
@@ -54,25 +49,6 @@ export default function CapabilitiesPage() {
   const [sysInfo, setSysInfo] = useState<SystemInfo | null>(null);
   const [clipboard, setClipboard] = useState("");
   const [storeValue, setStoreValue] = useState<string>("");
-
-  useEffect(() => {
-    info("capabilities 页面已加载");
-
-    // 注册全局快捷键：Cmd/Ctrl+Shift+Y 切换主窗口显隐
-    const setup = async () => {
-      if (await isRegistered(SHORTCUT)) return;
-      await register(SHORTCUT, () => {
-        const win = getCurrentWindow();
-        void win.isVisible().then((v) => (v ? win.hide() : win.show()));
-      });
-      toast.success(`快捷键已注册：${SHORTCUT}`);
-    };
-    void setup().catch((e) => toast.error(String(e)));
-
-    return () => {
-      void unregister(SHORTCUT);
-    };
-  }, []);
 
   /** Rust 命令调用演示 */
   const handleInvoke = async () => {
@@ -187,8 +163,7 @@ export default function CapabilitiesPage() {
       <header className="space-y-1">
         <h1 className="text-2xl font-medium">桌面能力</h1>
         <p className="text-sm text-muted-foreground">
-          常用 Tauri 插件开箱即用：Rust 命令、对话框、文件系统、剪贴板、通知、
-          全局快捷键、本地存储。全局快捷键 {SHORTCUT} 可切换窗口显隐。
+          常用 Tauri 插件开箱即用：Rust 命令、对话框、文件系统、剪贴板、通知、本地存储。
         </p>
       </header>
 
