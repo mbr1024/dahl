@@ -1,0 +1,14 @@
+# cargo audit 配置：显式豁免的已知漏洞（附原因，勿随意删除）
+#
+# RUSTSEC-2026-0235 (rkyv 0.7): 反序列化 Rc/Arc 时越界读。修复版需 rkyv 0.8.17+，
+#   而 rust_decimal（sqlx 传递依赖）仍锁定 rkyv 0.7，上游未迁移。实际风险低：
+#   需启用 rust_decimal 的 archive 特性且处理不可信数据才可达。
+# RUSTSEC-2023-0071 (rsa 0.9): Marvin Attack 时序侧信道。advisory patched 为空（官方未发布修复）。
+#   仅影响 sqlx 的 MySQL caching_sha2_password 认证路径；本项目只启用 SQLite 后端，
+#   该代码路径不参与构建与执行。
+
+[advisories]
+ignore = [
+  "RUSTSEC-2026-0235",
+  "RUSTSEC-2023-0071",
+]
