@@ -1,0 +1,24 @@
+import { Navigate, Route, Routes } from "react-router";
+import AppLayout from "@/components/layout/app-layout";
+import { ErrorBoundary } from "@/components/error-boundary";
+import HomePage from "@/routes/home";
+import CapabilitiesPage from "@/routes/capabilities";
+import DataPage from "@/routes/data";
+import SettingsPage from "@/routes/settings";
+
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route index element={<Navigate to="/home" replace />} />
+          <Route path="home" element={<HomePage />} />
+          <Route path="capabilities" element={<CapabilitiesPage />} />
+          <Route path="data" element={<DataPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/home" replace />} />
+      </Routes>
+    </ErrorBoundary>
+  );
+}
