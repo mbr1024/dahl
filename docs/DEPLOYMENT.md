@@ -1,36 +1,31 @@
-# Deployment Guide: updater Setup & Release Pipeline
+# 部署指南：updater 正式配置与发布流程
 
-> The `plugins.updater` config in `tauri.conf.json` is currently a **dev placeholder**
-> (example.com endpoint, dev key pair). You MUST replace it with a real update server and
-> production signing keys before shipping — otherwise clients can't pass signature verification.
+当前 `tauri.conf.json` 中的 `plugins.updater` 是**开发占位配置**（endpoint 为 example.com、公钥为开发密钥对）。
+正式发布前必须替换为真实更新服务器与正式密钥，否则客户端无法通过签名校验。
 
-## 1. How It Works
+## 1. 工作原理
 
-- Installers are signed with a [minisign](https://github.com/jedisct1/minisign) private key; the
-  public key is embedded in the app
-- On update check, the app fetches the JSON manifest from `endpoints`, verifies `signature`,
-  then downloads and installs the artifact
-- Endpoint templates support variables: `{{target}}` (e.g. `darwin-aarch64`), `{{arch}}`,
-  `{{current_version}}`
+- 产物（安装包）使用 [minisign](https://github.com/jedisct1/minisign) 私钥签名，公钥内置于应用
+- 应用启动更新检查时，请求 `endpoints` 中的 JSON 清单，校验 `signature` 后下载安装包
+- endpoint 模板支持变量：`{{target}}`（如 `darwin-aarch64`）、`{{arch}}`、`{{current_version}}`
 
-## 2. Generate a Production Key Pair
+## 2. 生成正式密钥对
 
 ```bash
 npm run tauri signer generate -w ~/.tauri/dahl.key
 ```
 
-- Private key: `~/.tauri/dahl.key` (**never commit it**, back it up carefully)
-- Public key: `~/.tauri/dahl.key.pub` (paste into `plugins.updater.pubkey` in `tauri.conf.json`)
+- 私钥：`~/.tauri/dahl.key`（**绝对不要提交到仓库**，妥善备份）
+- 公钥：`~/.tauri/dahl.key.pub`（需要粘贴进 `tauri.conf.json` 的 `plugins.updater.pubkey`）
 
-> Note: production public keys usually start with `dW50cnVzdGVkIGNvbW1lbnQ6...` — the current
-> placeholder follows the same format, just replace it.
+> 提示：正式公钥通常以 `dW50cnVzdGVkIGNvbW1lbnQ6...` 开头；当前占位配置也是这个格式，替换即可。
 
-## 3. Configure tauri.conf.json
+## 3. 配置 tauri.conf.json
 
 ```json
 "plugins": {
   "updater": {
-    "pubkey": "<production public key>",
+    "pubkey": "<正式公钥>",
     "endpoints": [
       "https://updates.example.com/dahl/{{target}}/{{arch}}/{{current_version}}"
     ]
@@ -38,21 +33,20 @@ npm run tauri signer generate -w ~/.tauri/dahl.key
 }
 ```
 
-The update server can be any static host (GitHub Releases / Cloudflare R2 / OSS / self-hosted
-Nginx) as long as it serves the manifest JSON at that URL.
+更新服务器可以是任意静态托管（GitHub Releases / Cloudflare R2 / OSS / 自建 Nginx），只要能在该 URL 返回清单 JSON。
 
-## 4. Release Manifest (JSON) Format
+## 4. 发布清单（JSON）格式
 
-The endpoint must return the following structure (Tauri 2 format):
+endpoint 需返回如下结构（Tauri 2 格式）：
 
 ```json
 {
   "version": "0.2.0",
-  "notes": "Release notes",
+  "notes": "新版本说明",
   "pub_date": "2026-08-08T00:00:00Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "<minisign signature base64>",
+      "signature": "<minisign 签名 base64>",
       "url": "https://updates.example.com/dahl/dahl_0.2.0_aarch64.dmg"
     },
     "darwin-x86_64": { "signature": "...", "url": "..." },
@@ -62,42 +56,37 @@ The endpoint must return the following structure (Tauri 2 format):
 }
 ```
 
-## 5. Signing & Releasing in CI
+## 5. CI 自动签名与发布
 
-`release.yml` already wires up signing env vars. Configure these in repo Settings → Secrets:
+本项目 `release.yml` 已预留签名环境变量。在仓库 Settings → Secrets 中配置：
 
-| Secret                               | Value                                |
+| Secret                               | 值                                   |
 | ------------------------------------ | ------------------------------------ |
-| `TAURI_SIGNING_PRIVATE_KEY`          | Full content of the private key file |
-| `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` | Key password (empty if none was set) |
+| `TAURI_SIGNING_PRIVATE_KEY`          | 私钥内容（`dahl.key` 文件全文）      |
+| `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` | 私钥密码（如生成时未设置密码可留空） |
 
-Once configured, tag-triggered releases get signed automatically by
-[tauri-action](https://github.com/tauri-apps/tauri-action) and uploaded to GitHub Release (draft).
+配置后，打 tag 触发 release 时 [tauri-action](https://github.com/tauri-apps/tauri-action) 会自动签名产物并上传到 GitHub Release（draft）。
 
-### Release Steps (maintainers)
+### 发布步骤（维护者）
 
-1. Merge feature PRs (each containing a changeset from `npm run changeset`)
-2. Merge the auto-generated "Version Packages" PR (version + CHANGELOG updates)
-3. Tag: `git tag v0.2.0 && git push origin v0.2.0`
-4. Wait for the `Release` workflow to build the 3-platform artifacts; confirm on GitHub
-   Releases (draft → publish)
-5. Update the manifest JSON on the update server (via CI or a script)
+1. 合并功能 PR（内含 `npm run changeset` 生成的变更集）
+2. 合并自动生成的 "Version Packages" PR（版本号与 CHANGELOG 更新）
+3. 打 tag：`git tag v0.2.0 && git push origin v0.2.0`
+4. 等待 `Release` workflow 构建三平台产物，在 GitHub Releases 中确认（draft → publish）
+5. 更新服务器上的清单 JSON（可用 CI 或脚本生成）
 
-## 6. Local Verification
+## 6. 本地自测
 
 ```bash
-# Build and sign a single artifact from src-tauri
+# 在 src-tauri 下构建并签名单个产物
 npm run tauri build
 npm run tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_0.1.0_aarch64.dmg
 ```
 
-Serve the artifact and signature from a local HTTP server, point the endpoint at it
-temporarily, and exercise the in-app "check for updates" flow.
+将签名与产物放到本地 HTTP 服务器，临时修改 endpoint 指向本地地址，验证应用内「检查更新」流程。
 
-## 7. Security Notes
+## 7. 安全提醒
 
-- Losing the private key blocks future updates; leaking it lets attackers ship malicious
-  versions — keep it in a password manager / CI secrets
-- Do not reuse the example public key in this repo
-- Serve the update server over HTTPS; keep the endpoint domain in sync with the CSP
-  `connect-src`
+- 私钥丢失将无法发布更新；泄露则攻击者可分发恶意版本——请使用密码管理器/CI Secret 妥善保管
+- 不要复用仓库内示例公钥
+- 更新服务器建议启用 HTTPS；endpoint 域名与 CSP `connect-src` 保持一致

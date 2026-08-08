@@ -1,9 +1,8 @@
 # Dahl
 
-> Named after **Ole-Johan Dahl** (1931–2002) — co-inventor of the Simula language and
-> a founding figure of object-oriented programming. Simula is remembered for what others
-> built on it; this scaffold is our attempt at the same idea: a foundation you build on,
-> not a product you ship.
+> Dahl 得名于 **Ole-Johan Dahl**（1931–2002）——Simula 语言共同发明者、面向对象编程的奠基人之一。
+> Simula 因后来者建基于它而被铭记；这个脚手架想做的也是同一件事：一块供你构建的地基，
+> 而不是一个交付即完的产品。
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 ![Tauri 2](https://img.shields.io/badge/Tauri-2-24c8db)
@@ -13,121 +12,120 @@
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 [![CI](https://github.com/mbr1024/dahl/actions/workflows/build.yml/badge.svg)](https://github.com/mbr1024/dahl/actions/workflows/build.yml)
 
-**中文版请见 [README.zh-CN.md](README.zh-CN.md).**
+**English version: [README.en.md](README.en.md).**
 
-A production-ready [Tauri 2](https://tauri.app) + React 19 desktop app scaffold, bundled with the mainstream engineering practices of 2026. Open the box and start building.
+Tauri 2 + React 19 桌面应用脚手架，集成了 2026 年主流的工程化实践，开箱即用。
 
-> Status: `0.1.0` first release. Release & update pipeline: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) · Changelog: [CHANGELOG.md](CHANGELOG.md)
+> 状态：`0.1.0` 首发。发布与更新流程见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)，变更记录见 [CHANGELOG.md](CHANGELOG.md)。
 
-## Screenshot
+## 截图
 
-![Dahl main window](docs/screenshot.png)
+![Dahl 主界面](docs/screenshot.png)
 
-## Tech Stack
+## 技术栈
 
-| Layer   | Choice                                     |
-| ------- | ------------------------------------------ |
-| UI      | React 19 + TypeScript + Vite               |
-| Desktop | Tauri 2 (Rust)                             |
-| Routing | react-router v8                            |
-| State   | zustand (client) + TanStack Query (server) |
-| Styling | Tailwind CSS v4 + shadcn/ui (Radix)        |
-| Linting | ESLint 10 (flat config) + Prettier         |
+| 层     | 选型                                        |
+| ------ | ------------------------------------------- |
+| UI     | React 19 + TypeScript + Vite                |
+| 桌面壳 | Tauri 2（Rust）                             |
+| 路由   | react-router v8                             |
+| 状态   | zustand（客户端）+ TanStack Query（服务端） |
+| 样式   | Tailwind CSS v4 + shadcn/ui（Radix）        |
+| 规范   | ESLint 10（flat config）+ Prettier          |
 
-## Quick Start
+## 快速开始
 
 ```bash
 npm install
-npm run tauri dev        # dev mode (first Rust compile is slow)
-npm run tauri build      # bundle installers
+npm run tauri dev        # 开发（首次编译 Rust 较慢）
+npm run tauri build      # 打包安装包
 ```
 
-## Common Commands
+## 常用命令
 
 ```bash
-npm run dev              # frontend dev server only
-npm run build            # frontend build
-npm run typecheck        # TypeScript type check
+npm run dev              # 仅前端 dev server
+npm run build            # 前端构建
+npm run typecheck        # TypeScript 类型检查
 npm run lint             # ESLint
-npm run lint:fix         # ESLint autofix
-npm run format           # Prettier format
-npm run test             # Vitest unit tests
-npm run test:e2e         # WebdriverIO e2e (builds debug binary first)
-npm run changeset        # record a version change (auto version PR)
-npm run tauri build      # bundle installers (macOS: .app/.dmg)
+npm run lint:fix         # ESLint 自动修复
+npm run format           # Prettier 格式化
+npm run test             # Vitest 单元测试
+npm run test:e2e         # WebdriverIO 端到端测试（自动构建 debug 版后运行）
+npm run changeset        # 记录版本变更（自动生成版本 PR）
+npm run tauri build      # 打包安装包（macOS: .app/.dmg）
 ```
 
-## End-to-End Testing
+## 端到端测试
 
-Built on WebdriverIO + `@wdio/tauri-service` (embedded WebDriver — the WebDriver server runs
-inside the app, no external driver needed). Covers: app launch, Rust command invoke, routing, i18n switching.
+基于 WebdriverIO + `@wdio/tauri-service`（embedded WebDriver，WebDriver server 内嵌于应用，
+无需安装外部 driver），覆盖：应用启动、Rust 命令 invoke、路由导航、i18n 切换。
 
 ```bash
-npm run test:e2e         # build debug binary, then run
-npm run test:e2e:run     # run directly (CI, when binary already built)
+npm run test:e2e         # 构建 debug 二进制后运行
+npm run test:e2e:run     # 已构建过时直接运行（CI 用）
 ```
 
-Notes:
+注意事项：
 
-- **Close any running Dahl instance first** (the single-instance plugin hands off new launches to the existing process)
-- Test plugins (`tauri-plugin-wdio`) are registered in dev/debug builds only; release artifacts carry no test backdoor
-- On headless Linux use `xvfb-run`; macOS/Windows work out of the box
-- Tests live in `e2e/`, config in `wdio.conf.ts`, type checks in `tsconfig.e2e.json`
+- **先关闭正在运行的 Dahl 实例**（single-instance 插件会让新实例让位给旧进程）
+- 测试插件（`tauri-plugin-wdio`）仅在 dev/debug 构建注册，release 产物不含测试后门
+- Linux 无显示环境需 `xvfb-run`；macOS/Windows 开箱即用
+- 测试代码在 `e2e/`，配置见 `wdio.conf.ts`，类型检查见 `tsconfig.e2e.json`
 
-## Directory Structure
+## 目录结构
 
 ```
 src/
-├── routes/          # page components (one route per file)
+├── routes/          # 页面级组件（一个路由一个文件）
 ├── components/
-│   ├── ui/          # shadcn-generated components (don't edit)
-│   ├── layout/      # app shell, theme/language providers
-│   └── error-boundary.tsx  # global error boundary
-├── stores/          # zustand global state (theme/language, persisted)
-├── services/        # data layer (TanStack Query + http plugin)
-├── i18n/            # react-i18next (en/zh, English default)
-├── hooks/           # shared hooks
-├── lib/             # utilities (cn, etc.)
-└── test/            # test setup
+│   ├── ui/          # shadcn 生成的组件（勿手改）
+│   ├── layout/      # 布局外壳、主题/语言 Provider
+│   └── error-boundary.tsx  # 全局错误边界
+├── stores/          # zustand 全局状态（主题/语言，persist）
+├── services/        # 数据请求层（TanStack Query + http 插件）
+├── i18n/            # react-i18next（en/zh，默认英文）
+├── hooks/           # 通用 hooks
+├── lib/             # 工具函数（cn 等）
+└── test/            # 测试 setup
 src-tauri/
-├── src/lib.rs       # Rust entry: plugin registration, commands, tray, vibrancy
-├── capabilities/    # permissions (zero-trust, opt-in)
-└── tauri.conf.json  # window, bundling, updater, deep-link config
-e2e/                 # WebdriverIO e2e tests (embedded WebDriver)
-docs/                # deployment & ops docs (updater setup, etc.)
-.github/workflows/   # CI: check / e2e / Linux build (full 3-platform release on tag)
+├── src/lib.rs       # Rust 入口：插件注册、命令、托盘、毛玻璃
+├── capabilities/    # 权限配置（zero-trust，按需放开）
+└── tauri.conf.json  # 窗口、打包、updater、deep-link 配置
+e2e/                 # WebdriverIO 端到端测试（embedded WebDriver）
+docs/                # 部署与运维文档（updater 配置等）
+.github/workflows/   # CI：检查 / e2e / 三平台构建 / tag 发布
 ```
 
-## Bundled Plugins
+## 已集成插件
 
-`fs`, `dialog`, `store`, `window-state`, `clipboard-manager`, `global-shortcut`,
-`notification`, `single-instance`, `http`, `updater`, `log`, `autostart`,
-`sql` (SQLite), `shell`, `deep-link`, `opener`
+`fs`、`dialog`、`store`、`window-state`、`clipboard-manager`、`global-shortcut`、
+`notification`、`single-instance`、`http`、`updater`、`log`、`autostart`、
+`sql`（SQLite）、`shell`、`deep-link`、`opener`
 
-The example page (sidebar → Desktop Capabilities) demonstrates: Rust command invoke,
-file dialogs, clipboard, system notifications, global shortcut (Cmd/Ctrl+Shift+Y toggles
-the window), key-value store, SQLite CRUD, shell execution, and deep-link handling.
+示例页（侧边栏 → 桌面能力）演示：Rust 命令 invoke、文件对话框、剪贴板、
+系统通知、全局快捷键（Cmd/Ctrl+Shift+Y 切换窗口）、键值存储、SQLite 增删查、
+Shell 执行、深链接监听。
 
-## Contributing
+## 贡献
 
-Issues and PRs are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first
-(dev environment, commit conventions, PR flow). Report security issues via
-[SECURITY.md](SECURITY.md). This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md).
+欢迎提交 Issue 与 PR！请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)（开发环境、提交规范、PR 流程），
+安全漏洞报告见 [SECURITY.md](SECURITY.md)，本项目遵循 [贡献者公约](CODE_OF_CONDUCT.md)。
 
-## Scaffold Conventions
+## 脚手架约定
 
-- **Permissions**: Tauri 2 denies everything by default. `global-shortcut` / `clipboard-manager` /
-  `sql` / `shell` / `deep-link` ship with empty `default` permission sets — add explicit `allow-*`
-  entries in `capabilities/` when using them (debug: see `src-tauri/gen/schemas/acl-manifests.json`)
-- **Tray**: left-click toggles the main window, right-click menu quits; closing the window hides it to the tray
-- **Updater**: `plugins.updater` is a dev placeholder (example.com endpoint, dev key pair) — replace
-  with a real update server and signing keys before shipping, see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
-- **Deep-link**: scheme is `dahl://`; register the scheme first when testing in dev mode
-- **Vibrancy**: the macOS main window uses transparency + vibrancy (`HudWindow` material, `transparent: true`);
-  sidebar/content use translucent backgrounds (plain opaque windows on Windows/Linux)
-- **Theme/language**: controlled by `src/stores/use-settings.ts`, preferences persisted; English by default
-- **Commits**: husky + lint-staged run lint/format automatically on pre-commit
+- **权限**：Tauri 2 默认全拒绝。`global-shortcut` / `clipboard-manager` / `sql` /
+  `shell` / `deep-link` 的 `default` 权限集为空，使用对应 API 时需在
+  `capabilities/` 显式加 `allow-*` 权限（排查：看 `src-tauri/gen/schemas/acl-manifests.json`）
+- **托盘**：左键单击切换主窗口显隐，右键菜单可退出；关闭窗口会隐藏到托盘
+- **updater**：`plugins.updater` 为开发占位配置（endpoint 为 example.com、公钥为
+  开发密钥对），正式发布前需替换为真实更新服务器与正式密钥，见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+- **deep-link**：scheme 为 `dahl://`，dev 模式测试需先在系统注册 scheme
+- **毛玻璃**：macOS 下主窗口开启透明 + vibrancy（HudWindow 材质，`transparent: true`），
+  侧边栏/内容区使用半透明背景（Windows/Linux 下为普通不透明窗口）
+- **主题/语言**：`src/stores/use-settings.ts` 控制，偏好持久化；默认英文
+- **提交**：husky + lint-staged 在 pre-commit 自动执行 lint/format
 
-## Recommended IDE
+## 推荐 IDE
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)

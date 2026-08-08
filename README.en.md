@@ -1,0 +1,133 @@
+# Dahl
+
+> Named after **Ole-Johan Dahl** (1931–2002) — co-inventor of the Simula language and
+> a founding figure of object-oriented programming. Simula is remembered for what others
+> built on it; this scaffold is our attempt at the same idea: a foundation you build on,
+> not a product you ship.
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
+![Tauri 2](https://img.shields.io/badge/Tauri-2-24c8db)
+![React 19](https://img.shields.io/badge/React-19-61dafb)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178c6)
+![Tailwind v4](https://img.shields.io/badge/Tailwind-v4-38bdf8)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
+[![CI](https://github.com/mbr1024/dahl/actions/workflows/build.yml/badge.svg)](https://github.com/mbr1024/dahl/actions/workflows/build.yml)
+
+**中文版（默认）: [README.md](README.md).**
+
+A production-ready [Tauri 2](https://tauri.app) + React 19 desktop app scaffold, bundled with the mainstream engineering practices of 2026. Open the box and start building.
+
+> Status: `0.1.0` first release. Release & update pipeline: [docs/DEPLOYMENT.en.md](docs/DEPLOYMENT.en.md) · Changelog: [CHANGELOG.en.md](CHANGELOG.en.md)
+
+## Screenshot
+
+![Dahl main window](docs/screenshot.png)
+
+## Tech Stack
+
+| Layer   | Choice                                     |
+| ------- | ------------------------------------------ |
+| UI      | React 19 + TypeScript + Vite               |
+| Desktop | Tauri 2 (Rust)                             |
+| Routing | react-router v8                            |
+| State   | zustand (client) + TanStack Query (server) |
+| Styling | Tailwind CSS v4 + shadcn/ui (Radix)        |
+| Linting | ESLint 10 (flat config) + Prettier         |
+
+## Quick Start
+
+```bash
+npm install
+npm run tauri dev        # dev mode (first Rust compile is slow)
+npm run tauri build      # bundle installers
+```
+
+## Common Commands
+
+```bash
+npm run dev              # frontend dev server only
+npm run build            # frontend build
+npm run typecheck        # TypeScript type check
+npm run lint             # ESLint
+npm run lint:fix         # ESLint autofix
+npm run format           # Prettier format
+npm run test             # Vitest unit tests
+npm run test:e2e         # WebdriverIO e2e (builds debug binary first)
+npm run changeset        # record a version change (auto version PR)
+npm run tauri build      # bundle installers (macOS: .app/.dmg)
+```
+
+## End-to-End Testing
+
+Built on WebdriverIO + `@wdio/tauri-service` (embedded WebDriver — the WebDriver server runs
+inside the app, no external driver needed). Covers: app launch, Rust command invoke, routing, i18n switching.
+
+```bash
+npm run test:e2e         # build debug binary, then run
+npm run test:e2e:run     # run directly (CI, when binary already built)
+```
+
+Notes:
+
+- **Close any running Dahl instance first** (the single-instance plugin hands off new launches to the existing process)
+- Test plugins (`tauri-plugin-wdio`) are registered in dev/debug builds only; release artifacts carry no test backdoor
+- On headless Linux use `xvfb-run`; macOS/Windows work out of the box
+- Tests live in `e2e/`, config in `wdio.conf.ts`, type checks in `tsconfig.e2e.json`
+
+## Directory Structure
+
+```
+src/
+├── routes/          # page components (one route per file)
+├── components/
+│   ├── ui/          # shadcn-generated components (don't edit)
+│   ├── layout/      # app shell, theme/language providers
+│   └── error-boundary.tsx  # global error boundary
+├── stores/          # zustand global state (theme/language, persisted)
+├── services/        # data layer (TanStack Query + http plugin)
+├── i18n/            # react-i18next (en/zh, English default)
+├── hooks/           # shared hooks
+├── lib/             # utilities (cn, etc.)
+└── test/            # test setup
+src-tauri/
+├── src/lib.rs       # Rust entry: plugin registration, commands, tray, vibrancy
+├── capabilities/    # permissions (zero-trust, opt-in)
+└── tauri.conf.json  # window, bundling, updater, deep-link config
+e2e/                 # WebdriverIO e2e tests (embedded WebDriver)
+docs/                # deployment & ops docs (updater setup, etc.)
+.github/workflows/   # CI: check / e2e / Linux build (full 3-platform release on tag)
+```
+
+## Bundled Plugins
+
+`fs`, `dialog`, `store`, `window-state`, `clipboard-manager`, `global-shortcut`,
+`notification`, `single-instance`, `http`, `updater`, `log`, `autostart`,
+`sql` (SQLite), `shell`, `deep-link`, `opener`
+
+The example page (sidebar → Desktop Capabilities) demonstrates: Rust command invoke,
+file dialogs, clipboard, system notifications, global shortcut (Cmd/Ctrl+Shift+Y toggles
+the window), key-value store, SQLite CRUD, shell execution, and deep-link handling.
+
+## Contributing
+
+Issues and PRs are welcome! Please read [CONTRIBUTING.en.md](CONTRIBUTING.en.md) first
+(dev environment, commit conventions, PR flow). Report security issues via
+[SECURITY.en.md](SECURITY.en.md). This project follows the [Contributor Covenant](CODE_OF_CONDUCT.en.md).
+
+## Scaffold Conventions
+
+- **Permissions**: Tauri 2 denies everything by default. `global-shortcut` / `clipboard-manager` /
+  `sql` / `shell` / `deep-link` ship with empty `default` permission sets — add explicit `allow-*`
+  entries in `capabilities/` when using them (debug: see `src-tauri/gen/schemas/acl-manifests.json`)
+- **Tray**: left-click toggles the main window, right-click menu quits; closing the window hides it to the tray
+- **Updater**: `plugins.updater` is a dev placeholder (example.com endpoint, dev key pair) — replace
+  with a real update server and signing keys before shipping, see [docs/DEPLOYMENT.en.md](docs/DEPLOYMENT.en.md)
+- **Deep-link**: scheme is `dahl://`; register the scheme first when testing in dev mode
+- **Vibrancy**: the macOS main window uses transparency + vibrancy (`HudWindow` material, `transparent: true`);
+  sidebar/content use translucent backgrounds (plain opaque windows on Windows/Linux)
+- **Theme/language**: controlled by `src/stores/use-settings.ts`, preferences persisted; English by default
+- **Commits**: husky + lint-staged run lint/format automatically on pre-commit
+
+## Recommended IDE
+
+- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
