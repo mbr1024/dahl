@@ -15,6 +15,11 @@ updates:
           - "react"
           - "react-dom"
           - "@types/react*"
+    # 刻意保持的版本（用户决定，暂不升级）：TS 5.8 / Vite 7 及配套插件
+    ignore:
+      - dependency-name: "typescript"
+      - dependency-name: "vite"
+      - dependency-name: "@vitejs/plugin-react"
     labels:
       - dependencies
 
