@@ -15,6 +15,10 @@ Tauri 2 + React 19 桌面应用脚手架，集成了 2026 年主流的工程化�
 
 > 状态：`0.1.0` 首发。发布与更新流程见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)，变更记录见 [CHANGELOG.md](CHANGELOG.md)。
 
+## 截图
+
+![Dahl 主界面](docs/screenshot.png)
+
 ## 技术栈
 
 | 层     | 选型                                        |
