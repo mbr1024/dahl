@@ -12,7 +12,7 @@
 ## 2. 生成正式密钥对
 
 ```bash
-npm run tauri signer generate -w ~/.tauri/dahl.key
+npx tauri signer generate -w ~/.tauri/dahl.key
 ```
 
 - 私钥：`~/.tauri/dahl.key`（**绝对不要提交到仓库**，妥善备份）
@@ -80,7 +80,7 @@ endpoint 需返回如下结构（Tauri 2 格式）：
 ```bash
 # 在 src-tauri 下构建并签名单个产物
 npm run tauri build
-npm run tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_0.1.0_aarch64.dmg
+npx tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_0.1.0_aarch64.dmg
 ```
 
 将签名与产物放到本地 HTTP 服务器，临时修改 endpoint 指向本地地址，验证应用内「检查更新」流程。

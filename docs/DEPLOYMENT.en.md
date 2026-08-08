@@ -16,7 +16,7 @@
 ## 2. Generate a Production Key Pair
 
 ```bash
-npm run tauri signer generate -w ~/.tauri/dahl.key
+npx tauri signer generate -w ~/.tauri/dahl.key
 ```
 
 - Private key: `~/.tauri/dahl.key` (**never commit it**, back it up carefully)
@@ -88,7 +88,7 @@ Once configured, tag-triggered releases get signed automatically by
 ```bash
 # Build and sign a single artifact from src-tauri
 npm run tauri build
-npm run tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_0.1.0_aarch64.dmg
+npx tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_0.1.0_aarch64.dmg
 ```
 
 Serve the artifact and signature from a local HTTP server, point the endpoint at it
