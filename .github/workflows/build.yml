@@ -79,4 +79,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: build
+          # 显式 --no-bundle：CI 只验证构建；完整打包由 release.yml 在打 tag 时执行
+          args: --no-bundle
