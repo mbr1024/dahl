@@ -17,8 +17,9 @@ describe("App 冒烟渲染", () => {
     await waitFor(() =>
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Dahl"),
     );
-    expect(screen.getByText("首页")).toBeInTheDocument();
-    expect(screen.getByText("桌面能力")).toBeInTheDocument();
+    // 默认语言为英文
+    expect(screen.getByText("Home")).toBeInTheDocument();
+    expect(screen.getByText("Capabilities")).toBeInTheDocument();
   });
 
   it("未知路径回退到首页", async () => {

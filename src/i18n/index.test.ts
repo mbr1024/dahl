@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import i18n from "./index";
 
 /** 递归收集翻译对象的所有叶子 key（含嵌套路径），用于对比 zh/en 结构一致性 */
@@ -13,10 +13,6 @@ function collectKeys(obj: Record<string, unknown>, prefix = ""): string[] {
 }
 
 describe("i18n 资源", () => {
-  beforeEach(async () => {
-    await i18n.changeLanguage("zh");
-  });
-
   it("zh 与 en 的 key 结构完全一致", () => {
     const zhKeys = collectKeys(
       i18n.getResourceBundle("zh", "translation") as Record<string, unknown>,
@@ -27,12 +23,12 @@ describe("i18n 资源", () => {
     expect(zhKeys.sort()).toEqual(enKeys.sort());
   });
 
-  it("默认语言为中文，切换英文后文案变化", async () => {
-    expect(i18n.language).toBe("zh");
-    expect(i18n.t("nav.home")).toBe("首页");
-
-    await i18n.changeLanguage("en");
+  it("默认语言为英文，切换中文后文案变化", async () => {
+    expect(i18n.language).toBe("en");
     expect(i18n.t("nav.home")).toBe("Home");
+
+    await i18n.changeLanguage("zh");
+    expect(i18n.t("nav.home")).toBe("首页");
     expect(i18n.t("home.title")).toBe("Dahl");
   });
 

@@ -20,7 +20,7 @@ export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
       theme: "system",
-      language: "zh",
+      language: "en",
       setTheme: (theme) => set({ theme }),
       setLanguage: (language) => set({ language }),
     }),
