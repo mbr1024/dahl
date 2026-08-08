@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "@wdio/globals",
+      "@wdio/mocha-framework",
+      "@wdio/types",
+      "@wdio/tauri-service",
+      "node"
+    ]
+  },
+  "include": ["e2e", "wdio.conf.ts"]
+}
