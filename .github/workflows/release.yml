@@ -58,3 +58,40 @@ jobs:
             所有产物附带 minisign 签名（`.sig` 文件），`latest.json` 供 updater 使用。
           releaseDraft: true
           prerelease: false
+
+  # tauri-action 生成的 latest.json 里下载地址是 api.github.com/releases/assets/<id>
+  # 格式（匿名访问 403，客户端无法下载）。构建完成后统一重写为浏览器下载 URL。
+  fix-updater-manifest:
+    needs: release
+    if: always() && needs.release.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Rewrite latest.json download URLs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          curl -sL "https://github.com/mbr1024/dahl/releases/download/${TAG}/latest.json" -o latest.json
+          python3 - <<'EOF'
+          import json, os, subprocess
+
+          tag = os.environ["TAG"]
+          manifest = json.load(open("latest.json"))
+          for info in manifest["platforms"].values():
+              url = info["url"]
+              if "api.github.com" not in url:
+                  continue
+              asset_id = url.rstrip("/").split("/")[-1]
+              name = subprocess.run(
+                  ["gh", "api", f"repos/mbr1024/dahl/releases/assets/{asset_id}", "--jq", ".name"],
+                  capture_output=True, text=True,
+              ).stdout.strip()
+              info["url"] = f"https://github.com/mbr1024/dahl/releases/download/{tag}/{name}"
+          json.dump(manifest, open("latest.json", "w"), indent=2)
+          EOF
+          gh release upload "${TAG}" latest.json --clobber
