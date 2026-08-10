@@ -4,6 +4,18 @@ Versioning follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 [Semantic Versioning](https://semver.org/). Releases and changelogs are maintained
 automatically by [Changesets](https://github.com/changesets/changesets).
 
+## [0.1.1] - 2026-08-08
+
+### Fixed
+
+- Remove stale "placeholder updater config" toast (updater now uses GitHub Releases)
+
+### Added
+
+- Formal release notes template (install table + signature notes)
+- Vitest coverage reporting (`npm run test:coverage`)
+- README quick start supports degit template scaffolding
+
 ## [0.1.0] - 2026-08-08
 
 ### Added
