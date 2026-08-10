@@ -75,7 +75,6 @@ export default function SettingsPage() {
       toast.success("更新已安装，重启后生效");
     } catch (e) {
       toast.error(`检查更新失败：${String(e)}`);
-      toast.info("脚手架使用占位更新配置（example.com），接入真实更新服务器后生效");
     } finally {
       setUpdating(false);
     }
