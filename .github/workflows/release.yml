@@ -76,7 +76,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.ref_name }}
         run: |
-          curl -sL "https://github.com/mbr1024/dahl/releases/download/${TAG}/latest.json" -o latest.json
+          # draft release 资产匿名请求不可见，必须用 gh（带 token）下载
+          gh release download "${TAG}" --pattern latest.json --clobber
           python3 - <<'EOF'
           import json, os, subprocess
 
