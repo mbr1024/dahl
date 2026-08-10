@@ -57,6 +57,20 @@ chore: 升级依赖
 
 > 第一次贡献者不用有压力——小修小补、文档改进都非常欢迎。
 
+## 版本变更集（Changesets）
+
+本项目用 [Changesets](https://github.com/changesets/changesets) 管理版本与 CHANGELOG。**凡是对用户可见的行为变更**（新功能、修复、破坏性改动），功能 PR 必须附带一个变更集：
+
+```bash
+pnpm changeset
+```
+
+交互式选择变更类型（major / minor / patch）并填写描述，会生成一个 `.changeset/xxx.md` 文件，随 PR 一起提交。变更集是"发布说明草稿"，不会立即改版本号。
+
+- 纯内部改动（重构、文档、CI、依赖升级）不需要变更集
+- 描述面向最终用户，说明"做了什么、影响什么"，而不是复述代码
+- 一个变更集对应一个用户可感知的变化；一个 PR 可包含多个变更集
+
 ## 测试约定
 
 - 单元测试放在被测文件同目录，命名 `*.test.ts(x)`，运行 `pnpm run test`

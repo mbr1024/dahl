@@ -69,11 +69,21 @@ endpoint 需返回如下结构（Tauri 2 格式）：
 
 ### 发布步骤（维护者）
 
-1. 合并功能 PR（内含 `pnpm run changeset` 生成的变更集）
+发布流程由 Changesets 自动驱动（见 `changesets.yml`）：
+
+1. 合并功能 PR（内含 `pnpm changeset` 生成的变更集，见 [CONTRIBUTING.md](../.github/CONTRIBUTING.md)）
 2. 合并自动生成的 "Version Packages" PR（版本号与 CHANGELOG 更新）
 3. 打 tag：`git tag v0.2.0 && git push origin v0.2.0`
 4. 等待 `Release` workflow 构建三平台产物，在 GitHub Releases 中确认（draft → publish）
 5. 更新服务器上的清单 JSON（可用 CI 或脚本生成）
+
+#### Version Packages PR 机制
+
+- 每次 push 到 `main` 时，`changesets.yml` 都会检查 `.changeset/` 下是否有变更集
+- 有则自动在 `changeset-release/main` 分支上执行 `changeset version`（删除变更集、更新 CHANGELOG、bump 版本号），并开一个 "Version Packages" PR 到 main
+- **合并该 PR 即完成发版准备**——版本号与 changelog 已由机器生成，维护者只需 review 变更是否符合预期
+- 该分支的生命周期由机器管理：`deleteBranch: true`（`.changeset/config.json`）会在 PR 合并后自动删除；若出现遗留的孤儿分支（如 PR 从未合并），可手动清理：
+  `git push origin --delete changeset-release/main`
 
 ## 6. 本地自测
 
