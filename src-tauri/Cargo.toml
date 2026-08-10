@@ -1,6 +1,6 @@
 [package]
 name = "dahl"
-version = "0.1.1"
+version = "0.2.0"
 description = "Dahl - production-ready Tauri 2 + React desktop app scaffold"
 authors = ["Dahl contributors"]
 edition = "2021"
