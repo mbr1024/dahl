@@ -106,7 +106,7 @@ docs/                # 部署与运维文档（updater 配置等）
 ## 贡献
 
 欢迎提交 Issue 与 PR！请先阅读 [CONTRIBUTING.md](.github/CONTRIBUTING.md)（开发环境、提交规范、PR 流程），
-安全漏洞报告见 [SECURITY.md](.github/SECURITY.md)，本项目遵循 [贡献者公约](.github/CODE_OF_CONDUCT.md)。
+安全漏洞报告见 [SECURITY.md](.github/SECURITY.md)。
 
 ## 脚手架约定
 

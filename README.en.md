@@ -108,7 +108,7 @@ key-value store, SQLite CRUD, shell execution, and deep-link handling.
 
 Issues and PRs are welcome! Please read [CONTRIBUTING.en.md](.github/CONTRIBUTING.en.md) first
 (dev environment, commit conventions, PR flow). Report security issues via
-[SECURITY.en.md](.github/SECURITY.en.md). This project follows the [Contributor Covenant](.github/CODE_OF_CONDUCT.en.md).
+[SECURITY.en.md](.github/SECURITY.en.md).
 
 ## Scaffold Conventions
 
