@@ -12,7 +12,7 @@
 
 Tauri 2 + React 19 桌面应用脚手架，集成了 2026 年主流的工程化实践，开箱即用。
 
-> 状态：`0.1.0` 首发。发布与更新流程见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)，变更记录见 [CHANGELOG.md](CHANGELOG.md)。
+> 状态：`0.2.0`。发布与更新流程见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)，变更记录见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 技术栈
 
@@ -37,6 +37,23 @@ pnpm install
 pnpm run tauri dev        # 开发（首次编译 Rust 较慢）
 pnpm run tauri build      # 打包安装包
 ```
+
+## 改造为新项目
+
+模板默认名字是 `Dahl`。用模板创建自己的项目后，按以下清单改名（degit 拉取后无模板变量替换，需手动改 5 处）：
+
+| 要改的项                           | 位置                                                                                                       |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| 包名                               | `package.json` → `name`                                                                                    |
+| Rust 包名                          | `src-tauri/Cargo.toml` → `package.name`                                                                    |
+| 应用名 / 窗口标题                  | `src-tauri/tauri.conf.json` → `productName`、`app.windows[0].title`                                        |
+| 应用唯一标识（决定安装路径/包 ID） | `src-tauri/tauri.conf.json` → `identifier`（如 `com.acme.myapp`）                                          |
+| deep-link scheme                   | `src-tauri/tauri.conf.json` → `plugins.deep-link.identifiers`，同步改 `src-tauri/Info.plist` 的 URL scheme |
+| 应用图标                           | 用 `scripts/make-app-icon.py` 从新图标素材生成 `src-tauri/icons/` 全套（参照脚本顶部说明）                 |
+
+改完跑 `pnpm run tauri dev` 确认应用名、窗口标题、`dahl://` scheme 均已替换。若更换了 `identifier`，首次运行前建议清除旧 identifier 的配置残留（macOS 的 `~/Library/Application Support/` 下旧目录）。
+
+> 本模板定位 **桌面应用**（macOS / Windows / Linux）。`src-tauri/icons/` 虽含 Android/iOS 素材，但 capabilities 与插件选择（autostart、window-state、updater、托盘）均按桌面设计，移动端不在支持范围。
 
 ## 常用命令
 

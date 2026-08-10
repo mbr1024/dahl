@@ -32,7 +32,7 @@ export default tseslint.config(
   },
   {
     // WebdriverIO e2e 测试：全局注入 browser/$/expect/describe 等
-    files: ["wdio.conf.ts", "test/e2e/**/*.ts"],
+    files: ["wdio.conf.ts", "e2e/**/*.ts"],
     languageOptions: {
       globals: {
         browser: "readonly",

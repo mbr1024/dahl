@@ -76,12 +76,18 @@ Once configured, tag-triggered releases get signed automatically by
 
 ### Release Steps (maintainers)
 
-1. Merge feature PRs (each containing a changeset from `pnpm run changeset`)
+Releases are driven by Changesets (see `changesets.yml`):
+
+1. Merge feature PRs (each containing a changeset from `pnpm changeset`, see
+   [CONTRIBUTING.en.md](../.github/CONTRIBUTING.en.md))
 2. Merge the auto-generated "Version Packages" PR (version + CHANGELOG updates)
-3. Tag: `git tag v0.2.0 && git push origin v0.2.0`
-4. Wait for the `Release` workflow to build the 3-platform artifacts; confirm on GitHub
+3. **Sync the Rust-side version**: `changeset version` only bumps `package.json` — manually
+   sync the new version into `src-tauri/Cargo.toml` and `src-tauri/tauri.conf.json`
+   (updater verification and artifact naming rely on it), then update `src-tauri/Cargo.lock`
+4. Tag: `git tag v0.2.0 && git push origin v0.2.0`
+5. Wait for the `Release` workflow to build the 3-platform artifacts; confirm on GitHub
    Releases (draft → publish)
-5. Update the manifest JSON on the update server (via CI or a script)
+6. Update the manifest JSON on the update server (via CI or a script)
 
 ## 6. Local Verification
 

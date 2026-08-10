@@ -73,9 +73,11 @@ endpoint 需返回如下结构（Tauri 2 格式）：
 
 1. 合并功能 PR（内含 `pnpm changeset` 生成的变更集，见 [CONTRIBUTING.md](../.github/CONTRIBUTING.md)）
 2. 合并自动生成的 "Version Packages" PR（版本号与 CHANGELOG 更新）
-3. 打 tag：`git tag v0.2.0 && git push origin v0.2.0`
-4. 等待 `Release` workflow 构建三平台产物，在 GitHub Releases 中确认（draft → publish）
-5. 更新服务器上的清单 JSON（可用 CI 或脚本生成）
+3. **同步 Rust 侧版本**：`changeset version` 只改 `package.json`，需手动把新版本号同步到
+   `src-tauri/Cargo.toml` 与 `src-tauri/tauri.conf.json`（updater 校验、产物命名均以此为准），并更新 `src-tauri/Cargo.lock`
+4. 打 tag：`git tag v0.2.0 && git push origin v0.2.0`
+5. 等待 `Release` workflow 构建三平台产物，在 GitHub Releases 中确认（draft → publish）
+6. 更新服务器上的清单 JSON（可用 CI 或脚本生成）
 
 #### Version Packages PR 机制
 

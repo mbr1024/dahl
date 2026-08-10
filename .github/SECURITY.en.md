@@ -24,6 +24,9 @@ We commit to:
   style, and network sources
 - **Test plugin isolation**: WebdriverIO test plugins are registered only under `debug_assertions`
   (dev builds) and never ship in release artifacts
+- **HTTP allowlist**: the template's `capabilities/default.json` allows `https://**` and
+  `http://**` for demo friendliness. Production projects should narrow it to a real domain
+  allowlist (e.g. `https://api.example.com/**`) and **drop the `http://**` cleartext entry**
 
 ## Dependency Vulnerabilities
 
