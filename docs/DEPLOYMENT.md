@@ -18,7 +18,7 @@ npx tauri signer generate -w ~/.tauri/dahl.key
 - 私钥：`~/.tauri/dahl.key`（**绝对不要提交到仓库**，妥善备份）
 - 公钥：`~/.tauri/dahl.key.pub`（需要粘贴进 `tauri.conf.json` 的 `plugins.updater.pubkey`）
 
-> 提示：正式公钥通常以 `dW50cnVzdGVkIGNvbW1lbnQ6...` 开头；当前占位配置也是这个格式，替换即可。
+> 提示：正式公钥通常以 `dW50cnVzdGVkIGNvbW1lbnQ6...` 开头；当前 `tauri.conf.json` 中的正式公钥也是这个格式。
 
 ## 3. 配置 tauri.conf.json
 
@@ -27,7 +27,7 @@ npx tauri signer generate -w ~/.tauri/dahl.key
   "updater": {
     "pubkey": "<正式公钥>",
     "endpoints": [
-      "https://updates.example.com/dahl/{{target}}/{{arch}}/{{current_version}}"
+      "https://github.com/mbr1024/dahl/releases/latest/download/latest.json"
     ]
   }
 }
@@ -69,7 +69,7 @@ endpoint 需返回如下结构（Tauri 2 格式）：
 
 ### 发布步骤（维护者）
 
-1. 合并功能 PR（内含 `npm run changeset` 生成的变更集）
+1. 合并功能 PR（内含 `pnpm run changeset` 生成的变更集）
 2. 合并自动生成的 "Version Packages" PR（版本号与 CHANGELOG 更新）
 3. 打 tag：`git tag v0.2.0 && git push origin v0.2.0`
 4. 等待 `Release` workflow 构建三平台产物，在 GitHub Releases 中确认（draft → publish）
@@ -79,8 +79,8 @@ endpoint 需返回如下结构（Tauri 2 格式）：
 
 ```bash
 # 在 src-tauri 下构建并签名单个产物
-npm run tauri build
-npx tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_0.1.0_aarch64.dmg
+pnpm run tauri build
+pnpm dlx tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_0.1.0_aarch64.dmg
 ```
 
 将签名与产物放到本地 HTTP 服务器，临时修改 endpoint 指向本地地址，验证应用内「检查更新」流程。

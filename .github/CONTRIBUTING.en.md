@@ -24,7 +24,7 @@ desktop apps — the goal is an "out-of-the-box engineering baseline". We partic
 | `pnpm run typecheck`                        | TypeScript type check                                        |
 | `pnpm run lint` / `pnpm run lint:fix`       | ESLint check / autofix                                       |
 | `pnpm run format` / `pnpm run format:check` | Prettier format / check                                      |
-| `npm test`                                  | Vitest unit tests                                            |
+| `pnpm run test`                             | Vitest unit tests                                            |
 | `pnpm run test:e2e`                         | WebdriverIO e2e (builds a debug binary first)                |
 | `pnpm run tauri build`                      | Bundle installers                                            |
 
@@ -32,7 +32,7 @@ desktop apps — the goal is an "out-of-the-box engineering baseline". We partic
 
 - **Formatting**: handled by Prettier (`.prettierrc`), auto-run on commit (husky + lint-staged)
 - **Lint**: ESLint flat config (`eslint.config.js`), TypeScript rules via `typescript-eslint`
-- **Structure**: follow the scaffold conventions in `README.md` — one route per file in `routes/`,
+- **Structure**: follow the scaffold conventions in [`README.md`](../README.md) — one route per file in `routes/`,
   `components/ui/` holds shadcn-generated components (**don't hand-edit**), business components go
   in their own folders, logic extracted to `hooks/`, `lib/`, `services/`
 - **i18n**: all UI copy goes through `i18n/` (en/zh) — no hardcoded strings
@@ -63,11 +63,11 @@ chore: bump dependencies
 
 ## Test Conventions
 
-- Unit tests live next to the code under test, named `*.test.ts(x)`, run with `npm test`
+- Unit tests live next to the code under test, named `*.test.ts(x)`, run with `pnpm run test`
 - E2E specs live in `e2e/`, named `*.spec.ts`, run with `pnpm run test:e2e`
 - E2E uses Tauri's official embedded WebDriver setup (`tauri-plugin-wdio-webdriver`), no external
   driver needed; use `xvfb-run` on headless Linux
 
 ## License
 
-By contributing you agree that your contributions are licensed under the [MIT License](LICENSE).
+By contributing you agree that your contributions are licensed under the [MIT License](../LICENSE).

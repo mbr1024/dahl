@@ -19,8 +19,19 @@ We commit to:
 - **Permission model**: Tauri 2's zero-trust permission model — every capability is denied by
   default and only opted into via `src-tauri/capabilities/` (`allow-*`)
 - **Update signing**: the `updater` uses minisign signatures; clients verify against the embedded
-  public key (production setup: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md))
+  public key (production setup: [docs/DEPLOYMENT.md](../docs/DEPLOYMENT.md))
 - **CSP**: a strict Content Security Policy is set in `tauri.conf.json`, restricting script,
   style, and network sources
 - **Test plugin isolation**: WebdriverIO test plugins are registered only under `debug_assertions`
   (dev builds) and never ship in release artifacts
+
+## Dependency Vulnerabilities
+
+- Frontend dependencies are checked periodically with `pnpm audit`
+- Rust dependencies should be checked with `cargo audit`
+- Upstream releases that contain security fixes are merged with priority
+
+## Supported Branches
+
+The project is at the 0.x stage (scaffold) and only `main` is maintained; after 1.0, we will
+follow semantic versioning support policies.

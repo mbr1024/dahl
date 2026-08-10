@@ -36,7 +36,7 @@ Tauri 2 + React 19 桌面应用脚手架，集成了 2026 年主流的工程化�
 
 ```bash
 # 方式一：直接用模板创建新项目（无需 fork）
-pnpm dlx degit mbr1024/dahl my-app && cd my-app && ppnpm install
+pnpm dlx degit mbr1024/dahl my-app && cd my-app && pnpm install
 pnpm run tauri dev        # 开发（首次编译 Rust 较慢）
 
 # 方式二：在本仓库内开发
@@ -112,8 +112,8 @@ docs/                # 部署与运维文档（updater 配置等）
 
 ## 贡献
 
-欢迎提交 Issue 与 PR！请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)（开发环境、提交规范、PR 流程），
-安全漏洞报告见 [SECURITY.md](SECURITY.md)，本项目遵循 [贡献者公约](CODE_OF_CONDUCT.md)。
+欢迎提交 Issue 与 PR！请先阅读 [CONTRIBUTING.md](.github/CONTRIBUTING.md)（开发环境、提交规范、PR 流程），
+安全漏洞报告见 [SECURITY.md](.github/SECURITY.md)，本项目遵循 [贡献者公约](.github/CODE_OF_CONDUCT.md)。
 
 ## 脚手架约定
 
@@ -124,7 +124,7 @@ docs/                # 部署与运维文档（updater 配置等）
 - **updater**：以 GitHub Releases 作为更新源（endpoint 指向 `latest.json`），正式签名密钥已配置；
   发布时 CI 自动签名并生成更新清单，完整流程见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 - **deep-link**：scheme 为 `dahl://`，dev 模式测试需先在系统注册 scheme
-- **主题/语言**：`src/stores/use-settings.ts` 控制，偏好持久化；默认英文（i18n 提供中英切换）
+- **主题/语言**：`src/stores/use-settings.ts` 控制，偏好持久化；默认中文（i18n 提供中英切换）
 - **提交**：husky + lint-staged 在 pre-commit 自动执行 lint/format
 
 ## 推荐 IDE

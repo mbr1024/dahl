@@ -37,7 +37,7 @@ A production-ready [Tauri 2](https://tauri.app) + React 19 desktop app scaffold,
 
 ```bash
 # Option 1: scaffold a new project from this template (no fork needed)
-pnpm dlx degit mbr1024/dahl my-app && cd my-app && ppnpm install
+pnpm dlx degit mbr1024/dahl my-app && cd my-app && pnpm install
 pnpm run tauri dev        # dev mode (first Rust compile is slow)
 
 # Option 2: develop in this repo
@@ -94,7 +94,7 @@ src/
 ├── lib/             # utilities (cn, etc.)
 └── test/            # test setup
 src-tauri/
-├── src/lib.rs       # Rust entry: plugin registration, commands, tray, vibrancy
+├── src/lib.rs       # Rust entry: plugin registration, commands, tray
 ├── capabilities/    # permissions (zero-trust, opt-in)
 └── tauri.conf.json  # window, bundling, updater, deep-link config
 e2e/                 # WebdriverIO e2e tests (embedded WebDriver)
@@ -104,31 +104,29 @@ docs/                # deployment & ops docs (updater setup, etc.)
 
 ## Bundled Plugins
 
-`fs`, `dialog`, `store`, `window-state`, `clipboard-manager`, `global-shortcut`,
+`fs`, `dialog`, `store`, `window-state`, `clipboard-manager`,
 `notification`, `single-instance`, `http`, `updater`, `log`, `autostart`,
 `sql` (SQLite), `shell`, `deep-link`, `opener`
 
 The example page (sidebar → Desktop Capabilities) demonstrates: Rust command invoke,
-file dialogs, clipboard, system notifications, global shortcut (Cmd/Ctrl+Shift+Y toggles
-the window), key-value store, SQLite CRUD, shell execution, and deep-link handling.
+file dialogs, clipboard, system notifications,
+key-value store, SQLite CRUD, shell execution, and deep-link handling.
 
 ## Contributing
 
-Issues and PRs are welcome! Please read [CONTRIBUTING.en.md](CONTRIBUTING.en.md) first
+Issues and PRs are welcome! Please read [CONTRIBUTING.en.md](.github/CONTRIBUTING.en.md) first
 (dev environment, commit conventions, PR flow). Report security issues via
-[SECURITY.en.md](SECURITY.en.md). This project follows the [Contributor Covenant](CODE_OF_CONDUCT.en.md).
+[SECURITY.en.md](.github/SECURITY.en.md). This project follows the [Contributor Covenant](.github/CODE_OF_CONDUCT.en.md).
 
 ## Scaffold Conventions
 
-- **Permissions**: Tauri 2 denies everything by default. `global-shortcut` / `clipboard-manager` /
+- **Permissions**: Tauri 2 denies everything by default. `clipboard-manager` /
   `sql` / `shell` / `deep-link` ship with empty `default` permission sets — add explicit `allow-*`
   entries in `capabilities/` when using them (debug: see `src-tauri/gen/schemas/acl-manifests.json`)
 - **Tray**: left-click toggles the main window, right-click menu quits; closing the window hides it to the tray
 - **Updater**: GitHub Releases is the update source (endpoint points to `latest.json`); the production
   signing key is configured, and CI signs and generates the update manifest on release — see [docs/DEPLOYMENT.en.md](docs/DEPLOYMENT.en.md)
 - **Deep-link**: scheme is `dahl://`; register the scheme first when testing in dev mode
-- **Vibrancy**: the macOS main window uses transparency + vibrancy (`HudWindow` material, `transparent: true`);
-  sidebar/content use translucent backgrounds (plain opaque windows on Windows/Linux)
 - **Theme/language**: controlled by `src/stores/use-settings.ts`, preferences persisted; Chinese by default
 - **Commits**: husky + lint-staged run lint/format automatically on pre-commit
 

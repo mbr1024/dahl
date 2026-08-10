@@ -12,11 +12,11 @@
 
 ## 测试情况
 
-- [ ] `npm run typecheck` 通过
-- [ ] `npm run lint` 通过
-- [ ] `npm test` 通过
-- [ ] （如涉及桌面能力）`npm run test:e2e` 通过
-- [ ] （如涉及构建）`npm run tauri build` 本地验证通过
+- [ ] `pnpm run typecheck` 通过
+- [ ] `pnpm run lint` 通过
+- [ ] `pnpm run test` 通过
+- [ ] （如涉及桌面能力）`pnpm run test:e2e` 通过
+- [ ] （如涉及构建）`pnpm run tauri build` 本地验证通过
 
 ## 截图（可选）
 

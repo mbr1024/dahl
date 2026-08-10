@@ -1,5 +1,11 @@
 # Contributor Covenant Code of Conduct
 
+> **About this project**: Dahl is an open-source Tauri 2 + React 19 desktop app scaffold.
+> To foster an open, welcoming, diverse and healthy community, this project adopts the
+> [Contributor Covenant](https://www.contributor-covenant.org) version 2.1 as its code of
+> conduct. The full text follows; reporting channels are described in "Enforcement" and in
+> the "Template Note" at the end.
+
 ## Our Pledge
 
 We as members, contributors, and leaders pledge to make participation in our
@@ -59,8 +65,9 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement at
-the address shown on the repo homepage.
+reported to the community leaders responsible for enforcement: on GitHub, reach
+out through the contact shown on the repo homepage, or use the private reporting
+flow described in [SECURITY.md](SECURITY.md) for security issues.
 
 All complaints will be reviewed and investigated promptly and fairly.
 
@@ -125,6 +132,17 @@ Community Impact Guidelines were inspired by
 For answers to common questions about this code of conduct, see the FAQ at
 [https://www.contributor-covenant.org/faq][FAQ]. Translations are available
 at [https://www.contributor-covenant.org/translations][translations].
+
+## Template Note (for scaffold users)
+
+This file ships as part of the Dahl scaffold. When you create a new project from
+Dahl, please:
+
+1. Replace the contact/reporting details in "Enforcement" with your own (e.g.
+   maintainer email or GitHub handle);
+2. Adjust the "Scope" wording as needed;
+3. Keep the [Contributor Covenant](https://www.contributor-covenant.org)
+   attribution and source links.
 
 [homepage]: https://www.contributor-covenant.org
 [v2.1]: https://www.contributor-covenant.org/version/2/1/code_of_conduct.html

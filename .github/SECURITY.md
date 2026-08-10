@@ -15,14 +15,14 @@
 ## 本项目与安全相关的设计
 
 - **权限模型**：基于 Tauri 2 的 zero-trust 权限模型，所有能力默认拒绝，仅在 `src-tauri/capabilities/` 按需放开（`allow-*`）
-- **更新签名**：`updater` 使用 minisign 签名，客户端校验公钥（正式部署步骤见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)）
+- **更新签名**：`updater` 使用 minisign 签名，客户端校验公钥（正式部署步骤见 [docs/DEPLOYMENT.md](../docs/DEPLOYMENT.md)）
 - **CSP**：`tauri.conf.json` 中配置了严格的 Content Security Policy，限制脚本、样式与网络请求来源
 - **测试插件隔离**：WebdriverIO 测试插件仅在 `debug_assertions`（dev 构建）下注册，不会进入 release 产物
 - **网络**：HTTP 请求默认走 `@tauri-apps/plugin-http`，`capabilities` 中显式约束允许访问的 URL
 
 ## 依赖漏洞
 
-- 前端依赖使用 `npm audit` 定期检查
+- 前端依赖使用 `pnpm audit` 定期检查
 - Rust 依赖建议使用 `cargo audit` 检查
 - 含安全修复的上游版本更新会优先合入
 

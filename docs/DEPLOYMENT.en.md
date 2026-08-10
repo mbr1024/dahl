@@ -16,14 +16,14 @@
 ## 2. Generate a Production Key Pair
 
 ```bash
-npx tauri signer generate -w ~/.tauri/dahl.key
+pnpm dlx tauri signer generate -w ~/.tauri/dahl.key
 ```
 
 - Private key: `~/.tauri/dahl.key` (**never commit it**, back it up carefully)
 - Public key: `~/.tauri/dahl.key.pub` (paste into `plugins.updater.pubkey` in `tauri.conf.json`)
 
-> Note: production public keys usually start with `dW50cnVzdGVkIGNvbW1lbnQ6...` — the current
-> placeholder follows the same format, just replace it.
+> Note: production public keys usually start with `dW50cnVzdGVkIGNvbW1lbnQ6...` — the production
+> key in `tauri.conf.json` follows the same format.
 
 ## 3. Configure tauri.conf.json
 
@@ -32,7 +32,7 @@ npx tauri signer generate -w ~/.tauri/dahl.key
   "updater": {
     "pubkey": "<production public key>",
     "endpoints": [
-      "https://updates.example.com/dahl/{{target}}/{{arch}}/{{current_version}}"
+      "https://github.com/mbr1024/dahl/releases/latest/download/latest.json"
     ]
   }
 }
@@ -76,7 +76,7 @@ Once configured, tag-triggered releases get signed automatically by
 
 ### Release Steps (maintainers)
 
-1. Merge feature PRs (each containing a changeset from `npm run changeset`)
+1. Merge feature PRs (each containing a changeset from `pnpm run changeset`)
 2. Merge the auto-generated "Version Packages" PR (version + CHANGELOG updates)
 3. Tag: `git tag v0.2.0 && git push origin v0.2.0`
 4. Wait for the `Release` workflow to build the 3-platform artifacts; confirm on GitHub
@@ -87,8 +87,8 @@ Once configured, tag-triggered releases get signed automatically by
 
 ```bash
 # Build and sign a single artifact from src-tauri
-npm run tauri build
-npx tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_0.1.0_aarch64.dmg
+pnpm run tauri build
+pnpm dlx tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_0.1.0_aarch64.dmg
 ```
 
 Serve the artifact and signature from a local HTTP server, point the endpoint at it

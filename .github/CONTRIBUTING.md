@@ -22,7 +22,7 @@
 | `pnpm run typecheck`                        | TypeScript 类型检查                             |
 | `pnpm run lint` / `pnpm run lint:fix`       | ESLint 检查 / 自动修复                          |
 | `pnpm run format` / `pnpm run format:check` | Prettier 格式化 / 检查                          |
-| `npm test`                                  | Vitest 单元测试                                 |
+| `pnpm run test`                             | Vitest 单元测试                                 |
 | `pnpm run test:e2e`                         | WebdriverIO 端到端测试（会先构建 debug 二进制） |
 | `pnpm run tauri build`                      | 打包安装包                                      |
 
@@ -30,7 +30,7 @@
 
 - **格式**：统一由 Prettier 处理（`.prettierrc`），提交前会自动执行（husky + lint-staged）
 - **Lint**：ESLint flat config（`eslint.config.js`），TypeScript 相关规则见 `typescript-eslint`
-- **目录职责**：请遵循 `README.md` 中的脚手架约定——`routes/` 一个路由一个文件，`components/ui/` 为 shadcn 生成组件（**勿手改**），业务组件放自己的目录，逻辑抽到 `hooks/`、`lib/`、`services/`
+- **目录职责**：请遵循 [`README.md`](../README.md) 中的脚手架约定——`routes/` 一个路由一个文件，`components/ui/` 为 shadcn 生成组件（**勿手改**），业务组件放自己的目录，逻辑抽到 `hooks/`、`lib/`、`services/`
 - **语言**：文案一律走 `i18n/`（zh/en），不要硬编码
 
 ## 提交规范
@@ -59,10 +59,10 @@ chore: 升级依赖
 
 ## 测试约定
 
-- 单元测试放在被测文件同目录，命名 `*.test.ts(x)`，运行 `npm test`
+- 单元测试放在被测文件同目录，命名 `*.test.ts(x)`，运行 `pnpm run test`
 - e2e 用例放在 `e2e/`，命名 `*.spec.ts`，运行 `pnpm run test:e2e`
 - e2e 基于 Tauri 官方 embedded WebDriver 方案（`tauri-plugin-wdio-webdriver`），无需安装外部 driver；Linux 无显示环境需用 `xvfb-run`
 
 ## 开源许可
 
-提交即表示你同意你的贡献以 [MIT License](LICENSE) 授权。
+提交即表示你同意你的贡献以 [MIT License](../LICENSE) 授权。
