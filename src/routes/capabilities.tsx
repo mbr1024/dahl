@@ -14,6 +14,7 @@ import Database from "@tauri-apps/plugin-sql";
 import { Command } from "@tauri-apps/plugin-shell";
 import { onOpenUrl } from "@tauri-apps/plugin-deep-link";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -46,6 +47,7 @@ function Section({
 }
 
 export default function CapabilitiesPage() {
+  const { t } = useTranslation();
   const [sysInfo, setSysInfo] = useState<SystemInfo | null>(null);
   const [clipboard, setClipboard] = useState("");
   const [storeValue, setStoreValue] = useState<string>("");
@@ -68,12 +70,15 @@ export default function CapabilitiesPage() {
         filters: [{ name: "文本", extensions: ["txt", "md", "json", "log"] }],
       });
       if (typeof file !== "string") {
-        toast.info("未选择文件");
+        toast.info(t("capabilities.file.noFile"));
         return;
       }
       const content = await readTextFile(file);
       toast.success(
-        `读取 ${file.split("/").pop()}：${content.slice(0, 60)}${content.length > 60 ? "…" : ""}`,
+        t("capabilities.file.readOk", {
+          file: file.split("/").pop(),
+          content: content.slice(0, 60) + (content.length > 60 ? "…" : ""),
+        }),
       );
     } catch (e) {
       toast.error(String(e));
@@ -82,9 +87,9 @@ export default function CapabilitiesPage() {
 
   /** 剪贴板：写入一段文本 */
   const handleWriteClipboard = async () => {
-    await writeText("来自 Dahl 的内容 ✦ " + new Date().toLocaleTimeString());
+    await writeText(t("capabilities.clipboard.content", { time: new Date().toLocaleTimeString() }));
     setClipboard(await readText());
-    toast.success("已写入剪贴板");
+    toast.success(t("capabilities.clipboard.written"));
   };
 
   /** 系统通知 */
@@ -92,12 +97,12 @@ export default function CapabilitiesPage() {
     let granted = await isPermissionGranted();
     if (!granted) granted = (await requestPermission()) === "granted";
     if (!granted) {
-      toast.error("通知权限被拒绝");
+      toast.error(t("capabilities.notify.denied"));
       return;
     }
     sendNotification({
       title: "Dahl",
-      body: "这是一条系统通知，来自 notification 插件",
+      body: t("capabilities.notify.body"),
     });
   };
 
@@ -108,12 +113,12 @@ export default function CapabilitiesPage() {
     const now = new Date().toLocaleTimeString();
     await store.set(key, now);
     setStoreValue(now);
-    toast.success(`已写入 store：${key} = ${now}`);
+    toast.success(t("capabilities.store.written", { key, value: now }));
   };
 
   /** 原生消息框 */
   const handleMessageBox = async () => {
-    await message("对话框/消息框插件工作正常", { title: "Dahl", kind: "info" });
+    await message(t("capabilities.message.ok"), { title: "Dahl", kind: "info" });
   };
 
   /** SQLite：建表、插入、查询 */
@@ -129,7 +134,7 @@ export default function CapabilitiesPage() {
         "SELECT id, title FROM todos ORDER BY id DESC LIMIT 5",
       );
       setTodos(rows);
-      toast.success(`SQLite 查询到 ${rows.length} 条记录`);
+      toast.success(t("capabilities.sql.ok", { count: rows.length }));
     } catch (e) {
       toast.error(String(e));
     }
@@ -139,7 +144,7 @@ export default function CapabilitiesPage() {
   const handleShell = async () => {
     try {
       const output = await Command.create("echo", ["hello from shell"]).execute();
-      toast.success(`echo 输出：${output.stdout}`);
+      toast.success(t("capabilities.shell.ok", { output: output.stdout }));
       info(`shell echo: ${output.stdout}`);
     } catch (e) {
       toast.error(String(e));
@@ -151,7 +156,7 @@ export default function CapabilitiesPage() {
   useEffect(() => {
     const unlisten = onOpenUrl((urls) => {
       setDeepLinks((prev) => [...urls, ...prev].slice(0, 5));
-      toast.success(`收到深链接：${urls.join(", ")}`);
+      toast.success(t("capabilities.deeplink.received", { urls: urls.join(", ") }));
     });
     return () => {
       void unlisten.then((fn) => fn());
@@ -161,15 +166,13 @@ export default function CapabilitiesPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium">桌面能力</h1>
-        <p className="text-sm text-muted-foreground">
-          常用 Tauri 插件开箱即用：Rust 命令、对话框、文件系统、剪贴板、通知、本地存储。
-        </p>
+        <h1 className="text-2xl font-medium">{t("capabilities.title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("capabilities.desc")}</p>
       </header>
 
-      <Section title="Rust 命令（invoke）" desc="前端调用 Rust 函数，返回结构化数据">
+      <Section title={t("capabilities.invoke.title")} desc={t("capabilities.invoke.desc")}>
         <div className="space-y-3">
-          <Button onClick={handleInvoke}>获取系统信息</Button>
+          <Button onClick={handleInvoke}>{t("capabilities.invoke.button")}</Button>
           {sysInfo && (
             <div className="flex flex-wrap gap-2 text-sm">
               <Badge>{sysInfo.os}</Badge>
@@ -181,35 +184,43 @@ export default function CapabilitiesPage() {
         </div>
       </Section>
 
-      <Section title="对话框 + 文件系统" desc="dialog 选文件，fs 读取内容">
-        <Button onClick={handlePickFile}>选择文件并读取</Button>
+      <Section title={t("capabilities.file.title")} desc={t("capabilities.file.desc")}>
+        <Button onClick={handlePickFile}>{t("capabilities.file.button")}</Button>
       </Section>
 
-      <Section title="剪贴板" desc="clipboard-manager 读写系统剪贴板">
+      <Section title={t("capabilities.clipboard.title")} desc={t("capabilities.clipboard.desc")}>
         <div className="space-y-3">
-          <Button onClick={handleWriteClipboard}>写入剪贴板</Button>
-          {clipboard && <p className="text-sm text-muted-foreground">当前内容：{clipboard}</p>}
+          <Button onClick={handleWriteClipboard}>{t("capabilities.clipboard.button")}</Button>
+          {clipboard && (
+            <p className="text-sm text-muted-foreground">
+              {t("capabilities.clipboard.current", { content: clipboard })}
+            </p>
+          )}
         </div>
       </Section>
 
-      <Section title="系统通知" desc="notification 插件发送桌面通知">
-        <Button onClick={handleNotify}>发送通知</Button>
+      <Section title={t("capabilities.notify.title")} desc={t("capabilities.notify.desc")}>
+        <Button onClick={handleNotify}>{t("capabilities.notify.button")}</Button>
       </Section>
 
-      <Section title="本地存储" desc="store 插件做键值持久化（比 localStorage 更贴近系统）">
+      <Section title={t("capabilities.store.title")} desc={t("capabilities.store.desc")}>
         <div className="space-y-3">
-          <Button onClick={handleStore}>写入当前时间</Button>
-          {storeValue && <p className="text-sm text-muted-foreground">上次写入：{storeValue}</p>}
+          <Button onClick={handleStore}>{t("capabilities.store.button")}</Button>
+          {storeValue && (
+            <p className="text-sm text-muted-foreground">
+              {t("capabilities.store.last", { value: storeValue })}
+            </p>
+          )}
         </div>
       </Section>
 
-      <Section title="原生消息框" desc="dialog 的 message 系列 API">
-        <Button onClick={handleMessageBox}>弹出消息框</Button>
+      <Section title={t("capabilities.message.title")} desc={t("capabilities.message.desc")}>
+        <Button onClick={handleMessageBox}>{t("capabilities.message.button")}</Button>
       </Section>
 
-      <Section title="SQLite" desc="sql 插件本地数据库（建表/插入/查询）">
+      <Section title={t("capabilities.sql.title")} desc={t("capabilities.sql.desc")}>
         <div className="space-y-3">
-          <Button onClick={handleSql}>插入并查询 todos</Button>
+          <Button onClick={handleSql}>{t("capabilities.sql.button")}</Button>
           {todos.length > 0 && (
             <ul className="space-y-1 text-sm text-muted-foreground">
               {todos.map((t) => (
@@ -222,14 +233,14 @@ export default function CapabilitiesPage() {
         </div>
       </Section>
 
-      <Section title="Shell 命令" desc="shell 插件执行系统命令（scope 限定 echo）">
-        <Button onClick={handleShell}>执行 echo</Button>
+      <Section title={t("capabilities.shell.title")} desc={t("capabilities.shell.desc")}>
+        <Button onClick={handleShell}>{t("capabilities.shell.button")}</Button>
       </Section>
 
-      <Section title="深链接" desc="deep-link 插件监听 dahl:// 唤起（dev 下需注册 scheme）">
+      <Section title={t("capabilities.deeplink.title")} desc={t("capabilities.deeplink.desc")}>
         <div className="space-y-3">
           <p className="text-sm text-muted-foreground">
-            在浏览器打开 <Badge variant="secondary">dahl://hello</Badge> 可唤起应用
+            {t("capabilities.deeplink.hint", { scheme: "dahl://hello" })}
           </p>
           {deepLinks.length > 0 && (
             <ul className="space-y-1 text-sm text-muted-foreground">

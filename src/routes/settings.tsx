@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getVersion } from "@tauri-apps/api/app";
 import { isEnabled, enable, disable } from "@tauri-apps/plugin-autostart";
-import { check } from "@tauri-apps/plugin-updater";
 import { invoke } from "@tauri-apps/api/core";
 import { useSettingsStore, type Language, type Theme } from "@/stores/use-settings";
+import { useUpdateStore } from "@/stores/use-update-store";
+import { runUpdateCheck, installUpdate } from "@/services/updater";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -33,14 +34,24 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [exePath, setExePath] = useState("");
   const [version, setVersion] = useState("");
-  const [updating, setUpdating] = useState(false);
+  const [platform, setPlatform] = useState("");
+
+  const autoCheck = useUpdateStore((s) => s.autoCheck);
+  const setAutoCheck = useUpdateStore((s) => s.setAutoCheck);
+  const status = useUpdateStore((s) => s.status);
+  const updateVersion = useUpdateStore((s) => s.version);
+  const updateError = useUpdateStore((s) => s.error);
+  const busy = status === "checking" || status === "installing";
 
   useEffect(() => {
     void isEnabled()
       .then(setAutoStart)
       .catch(() => setAutoStart(false))
       .finally(() => setLoading(false));
-    void invoke<{ exe: string }>("system_info").then((info) => setExePath(info.exe));
+    void invoke<{ exe: string; os: string; arch: string }>("system_info").then((info) => {
+      setExePath(info.exe);
+      setPlatform(`${info.os}/${info.arch}`);
+    });
     void getVersion().then(setVersion);
   }, []);
 
@@ -59,28 +70,14 @@ export default function SettingsPage() {
     }
   };
 
-  /** 检查并安装更新（当前为开发占位配置，会提示未配置更新服务器） */
+  /** 手动检查更新（非静默：完整提示） */
   const handleCheckUpdate = async () => {
-    setUpdating(true);
-    try {
-      const update = await check();
-      if (!update) {
-        toast.info("当前已是最新版本");
-        return;
-      }
-      toast.info(`发现新版本 ${update.version}，开始下载…`);
-      await update.download((e) => {
-        if (e.event === "Progress") {
-          // 进度事件可在这里更新 UI
-        }
-      });
-      await update.install();
-      toast.success("更新已安装，重启后生效");
-    } catch (e) {
-      toast.error(`检查更新失败：${String(e)}`);
-    } finally {
-      setUpdating(false);
-    }
+    await runUpdateCheck(false);
+  };
+
+  /** 重启并安装已下载的更新 */
+  const handleInstallUpdate = async () => {
+    await installUpdate();
   };
 
   return (
@@ -151,24 +148,59 @@ export default function SettingsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">更新</CardTitle>
-          <CardDescription>updater 插件检查并安装新版本</CardDescription>
+          <CardTitle className="text-base">{t("settings.update.title")}</CardTitle>
+          <CardDescription>{t("settings.update.desc")}</CardDescription>
         </CardHeader>
-        <CardContent>
-          <Button onClick={handleCheckUpdate} disabled={updating}>
-            {updating ? "检查中…" : "检查更新"}
-          </Button>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="auto-check">{t("settings.update.autoCheck")}</Label>
+              <p className="text-xs text-muted-foreground">{t("settings.update.autoCheckDesc")}</p>
+            </div>
+            <Switch id="auto-check" checked={autoCheck} onCheckedChange={setAutoCheck} />
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button onClick={handleCheckUpdate} disabled={busy}>
+              {status === "checking" ? t("settings.update.checking") : t("settings.update.check")}
+            </Button>
+            {status === "ready" && (
+              <Button onClick={handleInstallUpdate}>{t("settings.update.restartInstall")}</Button>
+            )}
+            {status === "downloading" && updateVersion && (
+              <span className="text-sm text-muted-foreground">
+                {t("settings.update.downloading", { version: updateVersion })}
+              </span>
+            )}
+            {status === "ready" && updateVersion && (
+              <span className="text-sm text-muted-foreground">
+                {t("settings.update.ready", { version: updateVersion })}
+              </span>
+            )}
+            {status === "up-to-date" && (
+              <span className="text-sm text-muted-foreground">{t("settings.update.upToDate")}</span>
+            )}
+            {status === "error" && updateError && (
+              <span className="text-sm text-destructive">
+                {t("settings.update.failed", { error: updateError })}
+              </span>
+            )}
+          </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">关于</CardTitle>
+          <CardTitle className="text-base">{t("settings.about.title")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
           <div className="flex items-center gap-2">
             <Badge>Dahl v{version}</Badge>
             <Badge variant="secondary">Tauri 2 + React 19</Badge>
+            {platform && (
+              <Badge variant="outline">
+                {t("settings.about.platform")}: {platform}
+              </Badge>
+            )}
           </div>
           {exePath && <p className="truncate text-xs text-muted-foreground">{exePath}</p>}
         </CardContent>
