@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0
+
+### Minor Changes
+
+- 5779be5: feat: 启动时静默检查更新（后台下载 + 就绪通知 + 设置页"重启并安装"）
+  feat: 设置页新增自动检查更新开关与更新状态指示
+  feat: 桌面能力示例页文案 i18n 全覆盖（zh/en）
+  fix: 关于区版本号改为运行时读取（getVersion），不再硬编码
+
 本项目的版本遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 与 [语义化版本](https://semver.org/lang/zh-CN/)。版本与变更记录由 [Changesets](https://github.com/changesets/changesets) 自动维护。
 
 ## [Unreleased]
