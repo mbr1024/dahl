@@ -41,6 +41,19 @@ jobs:
         with:
           tagName: v__VERSION__
           releaseName: "Dahl v__VERSION__"
-          releaseBody: "请参见各平台安装包；版本变更见 CHANGELOG.md。"
+          releaseBody: |
+            ## Dahl v__VERSION__
+
+            > 完整变更记录见 [CHANGELOG](https://github.com/mbr1024/dahl/blob/main/CHANGELOG.md)（由 changesets 自动维护）。
+
+            ### 安装
+
+            | 平台 | 安装包 |
+            |------|--------|
+            | macOS | `.dmg` / `.app.tar.gz` |
+            | Windows | `-setup.exe` / `.msi` |
+            | Linux | `.deb` / `.rpm` / `.AppImage` |
+
+            所有产物附带 minisign 签名（`.sig` 文件），`latest.json` 供 updater 使用。
           releaseDraft: true
           prerelease: false

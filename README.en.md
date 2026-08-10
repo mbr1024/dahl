@@ -36,6 +36,11 @@ A production-ready [Tauri 2](https://tauri.app) + React 19 desktop app scaffold,
 ## Quick Start
 
 ```bash
+# Option 1: scaffold a new project from this template (no fork needed)
+npx degit mbr1024/dahl my-app && cd my-app && npm install
+npm run tauri dev        # dev mode (first Rust compile is slow)
+
+# Option 2: develop in this repo
 npm install
 npm run tauri dev        # dev mode (first Rust compile is slow)
 npm run tauri build      # bundle installers

@@ -35,6 +35,11 @@ Tauri 2 + React 19 桌面应用脚手架，集成了 2026 年主流的工程化�
 ## 快速开始
 
 ```bash
+# 方式一：直接用模板创建新项目（无需 fork）
+npx degit mbr1024/dahl my-app && cd my-app && npm install
+npm run tauri dev        # 开发（首次编译 Rust 较慢）
+
+# 方式二：在本仓库内开发
 npm install
 npm run tauri dev        # 开发（首次编译 Rust 较慢）
 npm run tauri build      # 打包安装包

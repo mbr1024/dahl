@@ -25,3 +25,6 @@ dist-ssr
 
 # Agent memory (local only)
 .workbuddy/
+
+# Test coverage
+coverage
