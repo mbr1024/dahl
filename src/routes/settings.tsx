@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { getVersion } from "@tauri-apps/api/app";
 import { isEnabled, enable, disable } from "@tauri-apps/plugin-autostart";
 import { check } from "@tauri-apps/plugin-updater";
 import { invoke } from "@tauri-apps/api/core";
@@ -31,6 +32,7 @@ export default function SettingsPage() {
   const [autoStart, setAutoStart] = useState(false);
   const [loading, setLoading] = useState(true);
   const [exePath, setExePath] = useState("");
+  const [version, setVersion] = useState("");
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
@@ -39,6 +41,7 @@ export default function SettingsPage() {
       .catch(() => setAutoStart(false))
       .finally(() => setLoading(false));
     void invoke<{ exe: string }>("system_info").then((info) => setExePath(info.exe));
+    void getVersion().then(setVersion);
   }, []);
 
   const toggleAutoStart = async (checked: boolean) => {
@@ -164,7 +167,7 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
           <div className="flex items-center gap-2">
-            <Badge>Dahl v0.1.0</Badge>
+            <Badge>Dahl v{version}</Badge>
             <Badge variant="secondary">Tauri 2 + React 19</Badge>
           </div>
           {exePath && <p className="truncate text-xs text-muted-foreground">{exePath}</p>}
