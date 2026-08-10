@@ -48,7 +48,7 @@ jobs:
           workspaces: src-tauri
       - run: pnpm install --frozen-lockfile
       - name: Build debug binary
-        run: pnpm run tauri build -- --debug --no-bundle
+        run: pnpm run tauri build --debug --no-bundle
       - name: Run e2e tests (embedded WebDriver, headless via xvfb)
         run: xvfb-run pnpm run test:e2e:run
 
