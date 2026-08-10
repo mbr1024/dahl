@@ -48,6 +48,7 @@ pnpm run lint             # ESLint
 pnpm run lint:fix         # ESLint autofix
 pnpm run format           # Prettier format
 pnpm run test             # Vitest unit tests
+pnpm run test:coverage    # unit tests + coverage report (HTML into coverage/)
 pnpm run test:e2e         # WebdriverIO e2e (builds debug binary first)
 pnpm run changeset        # record a version change (auto version PR)
 pnpm run tauri build      # bundle installers (macOS: .app/.dmg)
@@ -69,6 +70,13 @@ Notes:
 - Test plugins (`tauri-plugin-wdio`) are registered in dev/debug builds only; release artifacts carry no test backdoor
 - On headless Linux use `xvfb-run`; macOS/Windows work out of the box
 - Tests live in `e2e/`, config in `wdio.conf.ts`, type checks in `tsconfig.e2e.json`
+
+## Coverage
+
+Unit-test coverage is measured by Vitest v8 (`test:coverage`), with thresholds in
+`vitest.config.ts` (currently a regression floor — the 80% target will be raised
+gradually as tests grow). CI runs coverage on every push/PR and uploads it to
+[Codecov](https://codecov.io/gh/mbr1024/dahl) (badge appears once activated).
 
 ## Directory Structure
 

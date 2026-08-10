@@ -48,6 +48,7 @@ pnpm run lint             # ESLint
 pnpm run lint:fix         # ESLint 自动修复
 pnpm run format           # Prettier 格式化
 pnpm run test             # Vitest 单元测试
+pnpm run test:coverage    # 单元测试 + 覆盖率报告（HTML 输出到 coverage/）
 pnpm run test:e2e         # WebdriverIO 端到端测试（自动构建 debug 版后运行）
 pnpm run changeset        # 记录版本变更（自动生成版本 PR）
 pnpm run tauri build      # 打包安装包（macOS: .app/.dmg）
@@ -69,6 +70,12 @@ pnpm run test:e2e:run     # 已构建过时直接运行（CI 用）
 - 测试插件（`tauri-plugin-wdio`）仅在 dev/debug 构建注册，release 产物不含测试后门
 - Linux 无显示环境需 `xvfb-run`；macOS/Windows 开箱即用
 - 测试代码在 `e2e/`，配置见 `wdio.conf.ts`，类型检查见 `tsconfig.e2e.json`
+
+## 覆盖率
+
+单元测试覆盖率由 Vitest v8 统计（`test:coverage`），阈值配置在 `vitest.config.ts`
+（当前为防回退基线，目标 80% 随测试增长逐步上调）；CI 每次 push/PR 都会跑覆盖率并
+上报 [Codecov](https://codecov.io/gh/mbr1024/dahl)（激活后徽章可见）。
 
 ## 目录结构
 

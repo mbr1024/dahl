@@ -15,8 +15,14 @@ export default defineConfig({
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],
       exclude: ["src/test/**", "src/components/ui/**", "src/**/*.test.{ts,tsx}"],
-      reporter: ["text", "html"],
+      reporter: ["text", "html", "json"],
       reportsDirectory: "./coverage",
+      thresholds: {
+        statements: 15,
+        branches: 10,
+        functions: 20,
+        lines: 15,
+      },
     },
   },
 });

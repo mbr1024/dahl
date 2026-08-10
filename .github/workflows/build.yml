@@ -25,7 +25,14 @@ jobs:
       - run: pnpm run typecheck
       - run: pnpm run lint
       - run: pnpm run format:check
-      - run: pnpm run test
+      - name: Unit tests with coverage
+        run: pnpm run test:coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage/coverage-final.json
+          # public repo 免 token；未激活 Codecov 时上传失败不阻塞 CI
+          fail_ci_if_error: false
 
   e2e:
     needs: check
