@@ -1,9 +1,5 @@
 # Dahl
 
-> Named after **Ole-Johan Dahl** (1931–2002), co-inventor of Simula and a founding figure of
-> object-oriented programming: he laid the foundation of modern programming — Dahl lays the
-> foundation for your desktop app.
-
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 ![Tauri 2](https://img.shields.io/badge/Tauri-2-24c8db)
 ![React 19](https://img.shields.io/badge/React-19-61dafb)
@@ -17,10 +13,6 @@
 A production-ready [Tauri 2](https://tauri.app) + React 19 desktop app scaffold, bundled with the mainstream engineering practices of 2026. Open the box and start building.
 
 > Status: `0.1.0` first release. Release & update pipeline: [docs/DEPLOYMENT.en.md](docs/DEPLOYMENT.en.md) · Changelog: [CHANGELOG.en.md](CHANGELOG.en.md)
-
-## Screenshot
-
-![Dahl main window](docs/screenshot.png)
 
 ## Tech Stack
 

@@ -1,8 +1,5 @@
 # Dahl
 
-> 得名于 **Ole-Johan Dahl**（1931–2002）——Simula 语言共同发明者、面向对象编程奠基人：
-> 他为现代编程打下地基，Dahl 为你的桌面应用打下地基。
-
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 ![Tauri 2](https://img.shields.io/badge/Tauri-2-24c8db)
 ![React 19](https://img.shields.io/badge/React-19-61dafb)
@@ -16,10 +13,6 @@
 Tauri 2 + React 19 桌面应用脚手架，集成了 2026 年主流的工程化实践，开箱即用。
 
 > 状态：`0.1.0` 首发。发布与更新流程见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)，变更记录见 [CHANGELOG.md](CHANGELOG.md)。
-
-## 截图
-
-![Dahl 主界面](docs/screenshot.png)
 
 ## 技术栈
 
