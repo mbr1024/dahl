@@ -36,28 +36,28 @@ Tauri 2 + React 19 桌面应用脚手架，集成了 2026 年主流的工程化�
 
 ```bash
 # 方式一：直接用模板创建新项目（无需 fork）
-npx degit mbr1024/dahl my-app && cd my-app && npm install
-npm run tauri dev        # 开发（首次编译 Rust 较慢）
+pnpm dlx degit mbr1024/dahl my-app && cd my-app && ppnpm install
+pnpm run tauri dev        # 开发（首次编译 Rust 较慢）
 
 # 方式二：在本仓库内开发
-npm install
-npm run tauri dev        # 开发（首次编译 Rust 较慢）
-npm run tauri build      # 打包安装包
+pnpm install
+pnpm run tauri dev        # 开发（首次编译 Rust 较慢）
+pnpm run tauri build      # 打包安装包
 ```
 
 ## 常用命令
 
 ```bash
-npm run dev              # 仅前端 dev server
-npm run build            # 前端构建
-npm run typecheck        # TypeScript 类型检查
-npm run lint             # ESLint
-npm run lint:fix         # ESLint 自动修复
-npm run format           # Prettier 格式化
-npm run test             # Vitest 单元测试
-npm run test:e2e         # WebdriverIO 端到端测试（自动构建 debug 版后运行）
-npm run changeset        # 记录版本变更（自动生成版本 PR）
-npm run tauri build      # 打包安装包（macOS: .app/.dmg）
+pnpm run dev              # 仅前端 dev server
+pnpm run build            # 前端构建
+pnpm run typecheck        # TypeScript 类型检查
+pnpm run lint             # ESLint
+pnpm run lint:fix         # ESLint 自动修复
+pnpm run format           # Prettier 格式化
+pnpm run test             # Vitest 单元测试
+pnpm run test:e2e         # WebdriverIO 端到端测试（自动构建 debug 版后运行）
+pnpm run changeset        # 记录版本变更（自动生成版本 PR）
+pnpm run tauri build      # 打包安装包（macOS: .app/.dmg）
 ```
 
 ## 端到端测试
@@ -66,8 +66,8 @@ npm run tauri build      # 打包安装包（macOS: .app/.dmg）
 无需安装外部 driver），覆盖：应用启动、Rust 命令 invoke、路由导航、i18n 切换。
 
 ```bash
-npm run test:e2e         # 构建 debug 二进制后运行
-npm run test:e2e:run     # 已构建过时直接运行（CI 用）
+pnpm run test:e2e         # 构建 debug 二进制后运行
+pnpm run test:e2e:run     # 已构建过时直接运行（CI 用）
 ```
 
 注意事项：

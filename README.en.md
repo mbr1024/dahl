@@ -37,28 +37,28 @@ A production-ready [Tauri 2](https://tauri.app) + React 19 desktop app scaffold,
 
 ```bash
 # Option 1: scaffold a new project from this template (no fork needed)
-npx degit mbr1024/dahl my-app && cd my-app && npm install
-npm run tauri dev        # dev mode (first Rust compile is slow)
+pnpm dlx degit mbr1024/dahl my-app && cd my-app && ppnpm install
+pnpm run tauri dev        # dev mode (first Rust compile is slow)
 
 # Option 2: develop in this repo
-npm install
-npm run tauri dev        # dev mode (first Rust compile is slow)
-npm run tauri build      # bundle installers
+pnpm install
+pnpm run tauri dev        # dev mode (first Rust compile is slow)
+pnpm run tauri build      # bundle installers
 ```
 
 ## Common Commands
 
 ```bash
-npm run dev              # frontend dev server only
-npm run build            # frontend build
-npm run typecheck        # TypeScript type check
-npm run lint             # ESLint
-npm run lint:fix         # ESLint autofix
-npm run format           # Prettier format
-npm run test             # Vitest unit tests
-npm run test:e2e         # WebdriverIO e2e (builds debug binary first)
-npm run changeset        # record a version change (auto version PR)
-npm run tauri build      # bundle installers (macOS: .app/.dmg)
+pnpm run dev              # frontend dev server only
+pnpm run build            # frontend build
+pnpm run typecheck        # TypeScript type check
+pnpm run lint             # ESLint
+pnpm run lint:fix         # ESLint autofix
+pnpm run format           # Prettier format
+pnpm run test             # Vitest unit tests
+pnpm run test:e2e         # WebdriverIO e2e (builds debug binary first)
+pnpm run changeset        # record a version change (auto version PR)
+pnpm run tauri build      # bundle installers (macOS: .app/.dmg)
 ```
 
 ## End-to-End Testing
@@ -67,8 +67,8 @@ Built on WebdriverIO + `@wdio/tauri-service` (embedded WebDriver — the WebDriv
 inside the app, no external driver needed). Covers: app launch, Rust command invoke, routing, i18n switching.
 
 ```bash
-npm run test:e2e         # build debug binary, then run
-npm run test:e2e:run     # run directly (CI, when binary already built)
+pnpm run test:e2e         # build debug binary, then run
+pnpm run test:e2e:run     # run directly (CI, when binary already built)
 ```
 
 Notes:

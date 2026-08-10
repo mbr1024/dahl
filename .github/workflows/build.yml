@@ -16,14 +16,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run format:check
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
+      - run: pnpm run lint
+      - run: pnpm run format:check
       - run: npm test
 
   e2e:
@@ -31,10 +32,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
       - uses: dtolnay/rust-toolchain@stable
       - name: Install Linux dependencies
         run: |
@@ -44,11 +46,11 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
       - name: Build debug binary
-        run: npm run tauri build -- --debug --no-bundle
+        run: pnpm run tauri build -- --debug --no-bundle
       - name: Run e2e tests (embedded WebDriver, headless via xvfb)
-        run: xvfb-run npm run test:e2e:run
+        run: xvfb-run pnpm run test:e2e:run
 
   # 日常 CI 只做 Linux 构建冒烟（快速反馈）；
   # 三平台完整打包在 release.yml（打 v* tag 时触发）执行
@@ -57,10 +59,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
       - uses: dtolnay/rust-toolchain@stable
       - name: Install Linux dependencies
         run: |
@@ -74,7 +77,7 @@ jobs:
       - name: Rust dependency audit
         working-directory: src-tauri
         run: cargo audit
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
       - name: Build (Linux smoke)
         uses: tauri-apps/tauri-action@v1
         env:

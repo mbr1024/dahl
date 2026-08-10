@@ -17,16 +17,16 @@ desktop apps — the goal is an "out-of-the-box engineering baseline". We partic
 
 ## Common Commands
 
-| Command                                   | Description                                                  |
-| ----------------------------------------- | ------------------------------------------------------------ |
-| `npm run dev`                             | Frontend dev server only (port 1420)                         |
-| `npm run tauri dev`                       | Run the desktop app in dev mode (first Rust compile is slow) |
-| `npm run typecheck`                       | TypeScript type check                                        |
-| `npm run lint` / `npm run lint:fix`       | ESLint check / autofix                                       |
-| `npm run format` / `npm run format:check` | Prettier format / check                                      |
-| `npm test`                                | Vitest unit tests                                            |
-| `npm run test:e2e`                        | WebdriverIO e2e (builds a debug binary first)                |
-| `npm run tauri build`                     | Bundle installers                                            |
+| Command                                     | Description                                                  |
+| ------------------------------------------- | ------------------------------------------------------------ |
+| `pnpm run dev`                              | Frontend dev server only (port 1420)                         |
+| `pnpm run tauri dev`                        | Run the desktop app in dev mode (first Rust compile is slow) |
+| `pnpm run typecheck`                        | TypeScript type check                                        |
+| `pnpm run lint` / `pnpm run lint:fix`       | ESLint check / autofix                                       |
+| `pnpm run format` / `pnpm run format:check` | Prettier format / check                                      |
+| `npm test`                                  | Vitest unit tests                                            |
+| `pnpm run test:e2e`                         | WebdriverIO e2e (builds a debug binary first)                |
+| `pnpm run tauri build`                      | Bundle installers                                            |
 
 ## Code Style
 
@@ -64,7 +64,7 @@ chore: bump dependencies
 ## Test Conventions
 
 - Unit tests live next to the code under test, named `*.test.ts(x)`, run with `npm test`
-- E2E specs live in `e2e/`, named `*.spec.ts`, run with `npm run test:e2e`
+- E2E specs live in `e2e/`, named `*.spec.ts`, run with `pnpm run test:e2e`
 - E2E uses Tauri's official embedded WebDriver setup (`tauri-plugin-wdio-webdriver`), no external
   driver needed; use `xvfb-run` on headless Linux
 

@@ -15,16 +15,16 @@
 
 ## 常用命令
 
-| 命令                                      | 说明                                            |
-| ----------------------------------------- | ----------------------------------------------- |
-| `npm run dev`                             | 仅前端 dev server（端口 1420）                  |
-| `npm run tauri dev`                       | 开发模式运行桌面应用（首次编译 Rust 较慢）      |
-| `npm run typecheck`                       | TypeScript 类型检查                             |
-| `npm run lint` / `npm run lint:fix`       | ESLint 检查 / 自动修复                          |
-| `npm run format` / `npm run format:check` | Prettier 格式化 / 检查                          |
-| `npm test`                                | Vitest 单元测试                                 |
-| `npm run test:e2e`                        | WebdriverIO 端到端测试（会先构建 debug 二进制） |
-| `npm run tauri build`                     | 打包安装包                                      |
+| 命令                                        | 说明                                            |
+| ------------------------------------------- | ----------------------------------------------- |
+| `pnpm run dev`                              | 仅前端 dev server（端口 1420）                  |
+| `pnpm run tauri dev`                        | 开发模式运行桌面应用（首次编译 Rust 较慢）      |
+| `pnpm run typecheck`                        | TypeScript 类型检查                             |
+| `pnpm run lint` / `pnpm run lint:fix`       | ESLint 检查 / 自动修复                          |
+| `pnpm run format` / `pnpm run format:check` | Prettier 格式化 / 检查                          |
+| `npm test`                                  | Vitest 单元测试                                 |
+| `pnpm run test:e2e`                         | WebdriverIO 端到端测试（会先构建 debug 二进制） |
+| `pnpm run tauri build`                      | 打包安装包                                      |
 
 ## 代码规范
 
@@ -60,7 +60,7 @@ chore: 升级依赖
 ## 测试约定
 
 - 单元测试放在被测文件同目录，命名 `*.test.ts(x)`，运行 `npm test`
-- e2e 用例放在 `e2e/`，命名 `*.spec.ts`，运行 `npm run test:e2e`
+- e2e 用例放在 `e2e/`，命名 `*.spec.ts`，运行 `pnpm run test:e2e`
 - e2e 基于 Tauri 官方 embedded WebDriver 方案（`tauri-plugin-wdio-webdriver`），无需安装外部 driver；Linux 无显示环境需用 `xvfb-run`
 
 ## 开源许可
