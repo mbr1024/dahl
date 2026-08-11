@@ -3,18 +3,21 @@ import { runUpdateCheck, installUpdate } from "./updater";
 import { useUpdateStore } from "@/stores/use-update-store";
 import "@/i18n";
 
-const { mockCheck, mockIsPermissionGranted, mockSendNotification, mockToast } = vi.hoisted(() => ({
-  mockCheck: vi.fn(),
-  mockIsPermissionGranted: vi.fn(),
-  mockSendNotification: vi.fn(),
-  mockToast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },
-}));
+const { mockCheck, mockIsPermissionGranted, mockSendNotification, mockToast, mockRelaunch } =
+  vi.hoisted(() => ({
+    mockCheck: vi.fn(),
+    mockIsPermissionGranted: vi.fn(),
+    mockSendNotification: vi.fn(),
+    mockToast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },
+    mockRelaunch: vi.fn(),
+  }));
 
 vi.mock("@tauri-apps/plugin-updater", () => ({ check: mockCheck }));
 vi.mock("@tauri-apps/plugin-notification", () => ({
   isPermissionGranted: mockIsPermissionGranted,
   sendNotification: mockSendNotification,
 }));
+vi.mock("@tauri-apps/plugin-process", () => ({ relaunch: mockRelaunch }));
 vi.mock("sonner", () => ({ toast: mockToast }));
 
 const makeUpdate = () => ({
@@ -122,9 +125,11 @@ describe("installUpdate", () => {
     mockCheck.mockReset();
     mockSendNotification.mockClear();
     mockToast.error.mockClear();
+    mockRelaunch.mockReset();
+    mockRelaunch.mockResolvedValue(undefined);
   });
 
-  it("下载并安装更新", async () => {
+  it("下载、安装并重启到新版本", async () => {
     const update = makeUpdate();
     mockCheck.mockResolvedValue(update);
 
@@ -133,6 +138,7 @@ describe("installUpdate", () => {
     expect(useUpdateStore.getState().status).toBe("installing");
     expect(update.download).toHaveBeenCalledTimes(1);
     expect(update.install).toHaveBeenCalledTimes(1);
+    expect(mockRelaunch).toHaveBeenCalledTimes(1);
   });
 
   it("无新版本时置为 up-to-date", async () => {

@@ -38,6 +38,7 @@ image = { version = "0.25", default-features = false, features = ["png"] }
 # 若放入 macOS 专属段会导致 Windows/Linux release 构建报 Permission wdio:default not found
 tauri-plugin-wdio = "1"
 tauri-plugin-wdio-webdriver = "1"
+tauri-plugin-process = "2.3.1"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-autostart = "2"
