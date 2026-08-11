@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.4
+
+### Patch Changes
+
+- 8e42a00: perf: 「重启并安装」复用已下载的安装包缓存，不再重复下载（点安装立即进入安装+重启）
+
 ## 0.3.3
 
 ### Patch Changes
