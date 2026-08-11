@@ -1,6 +1,6 @@
 {
   "name": "dahl",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Production-ready Tauri 2 + React 19 desktop app scaffold",
   "license": "MIT",
   "packageManager": "pnpm@10.14.0",
