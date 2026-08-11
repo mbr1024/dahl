@@ -1,6 +1,6 @@
 import { check, type Update } from "@tauri-apps/plugin-updater";
 import { isPermissionGranted, sendNotification } from "@tauri-apps/plugin-notification";
-import { relaunch } from "@tauri-apps/plugin-process";
+import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
 import i18n from "@/i18n";
 import { useUpdateStore } from "@/stores/use-update-store";
@@ -78,8 +78,9 @@ export async function installUpdate(): Promise<void> {
     store.setStatus("installing");
     await update.download(() => {});
     await update.install();
-    // install 只完成安装，需手动 relaunch 重启到新版本
-    await relaunch();
+    // install 只完成安装；restart_app 用"延迟启动器"重启（直接 relaunch 会被
+    // single-instance 让位导致旧版本继续运行）
+    await invoke("restart_app");
   } catch (e) {
     store.setStatus("ready");
     store.setError(String(e));
