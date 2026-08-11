@@ -38,6 +38,8 @@ jobs:
       - run: pnpm run typecheck
       - run: pnpm run lint
       - run: pnpm run format:check
+      - name: npm dependencies audit
+        run: pnpm audit
       - name: Unit tests with coverage
         run: pnpm run test:coverage
       - name: Upload coverage to Codecov

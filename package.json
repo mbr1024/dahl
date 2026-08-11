@@ -33,8 +33,10 @@
       "prettier --write"
     ]
   },
-  "overrides": {
-    "serialize-javascript": "^7.1.0"
+  "pnpm": {
+    "overrides": {
+      "serialize-javascript": "7.1.0"
+    }
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
