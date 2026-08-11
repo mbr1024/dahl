@@ -43,52 +43,13 @@ fn toggle_main_window(app: &tauri::AppHandle) {
 }
 
 /// 更新安装完成后重启到新版本。
-/// 不能直接用 relaunch（spawn 新进程 + 退出旧进程）：新进程启动时 single-instance
-/// 插件检测到旧进程的 socket 还在，会直接让位退出，导致旧版本继续运行。
-/// 改为"延迟启动器"：先安排一个分离进程在 1.5s 后启动新版本，再退出当前进程——
-/// 届时旧进程已退出、socket 已清理，新版本以主实例身份启动。
+/// 不能直接 relaunch：新进程启动时 single-instance 插件检测到本进程的单实例
+/// 信号，会直接让位退出，导致旧版本继续运行。正确顺序是先解除 single-instance
+/// 锁（destroy），再正常重启——新实例启动时连接不到锁，自然成为主实例。
 #[tauri::command]
 fn restart_app(app: tauri::AppHandle) {
-    if let Some(cmd) = launch_after_delay_command() {
-        let _ = std::process::Command::new("sh")
-            .arg("-c")
-            .arg(format!("sleep 1.5 && {cmd}"))
-            .spawn();
-    }
-    app.exit(0);
-}
-
-/// 根据当前可执行文件推导"启动新版本"的 shell 命令。
-fn launch_after_delay_command() -> Option<String> {
-    let exe = std::env::current_exe().ok()?;
-    #[cfg(target_os = "macos")]
-    {
-        // /path/Dahl.app/Contents/MacOS/dahl → /path/Dahl.app
-        let bundle = app_bundle_path(&exe)?;
-        Some(format!("open '{}'", bundle.display()))
-    }
-    #[cfg(target_os = "windows")]
-    {
-        // Windows 无 sh，改用 cmd 的 start；由外层 sh -c 组装
-        Some(format!("start \"\" \"{}\"", exe.display()))
-    }
-    #[cfg(not(any(target_os = "macos", target_os = "windows")))]
-    {
-        Some(format!("'{}'", exe.display()))
-    }
-}
-
-/// macOS：从可执行文件路径推导 .app bundle 路径（MacOS → Contents → <App>.app）。
-fn app_bundle_path(exe: &std::path::Path) -> Option<std::path::PathBuf> {
-    let macos_dir = exe.parent()?;
-    if macos_dir.file_name()? != "MacOS" {
-        return None;
-    }
-    let contents_dir = macos_dir.parent()?;
-    if contents_dir.file_name()? != "Contents" {
-        return None;
-    }
-    Some(contents_dir.parent()?.to_path_buf())
+    tauri_plugin_single_instance::destroy(&app);
+    app.request_restart();
 }
 
 /// 系统托盘：左键单击切换主窗口显隐，右键菜单提供"退出"
@@ -203,19 +164,5 @@ mod tests {
         let img = image::load_from_memory(TRAY_ICON).expect("tray.png 解码失败");
         assert!(img.width() > 0 && img.height() > 0, "图标尺寸应大于 0");
         assert_eq!(img.color().has_alpha(), true, "template 图标需要 alpha 通道");
-    }
-
-    /// 从可执行文件路径推导 .app bundle 路径
-    #[test]
-    fn app_bundle_path_derives_bundle_from_binary() {
-        let exe = std::path::Path::new("/Applications/Dahl.app/Contents/MacOS/dahl");
-        let bundle = app_bundle_path(exe).expect("应推导出 bundle 路径");
-        assert_eq!(bundle, std::path::Path::new("/Applications/Dahl.app"));
-
-        // 非标准结构返回 None
-        assert!(app_bundle_path(std::path::Path::new("/usr/local/bin/dahl")).is_none());
-        assert!(
-            app_bundle_path(std::path::Path::new("/Applications/Dahl.app/Contents/dahl")).is_none()
-        );
     }
 }
