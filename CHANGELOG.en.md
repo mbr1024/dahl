@@ -6,9 +6,21 @@ automatically by [Changesets](https://github.com/changesets/changesets).
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-08-11
+
+### Fixed
+
+- Repeated "check for updates" while an update is already downloaded no longer
+  re-downloads — it shows the "restart to install" prompt instead
+
+## [0.2.0] - 2026-08-10
+
 ### Added
 
-- Silent auto-update with update-status indicators (example page fully i18n'd)
+- Silent auto-update on launch (background download + ready notification +
+  "Restart & install" on the settings page)
+- Auto-check toggle and update-status indicators on the settings page
+- Full i18n coverage (zh/en) for the capabilities example page
 
 ### Fixed
 
