@@ -7,6 +7,7 @@
 ![Tailwind v4](https://img.shields.io/badge/Tailwind-v4-38bdf8)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 [![CI](https://github.com/mbr1024/dahl/actions/workflows/build.yml/badge.svg)](https://github.com/mbr1024/dahl/actions/workflows/build.yml)
+[![codecov](https://app.codecov.io/gh/mbr1024/dahl/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mbr1024/dahl)
 
 **中文版（默认）: [README.md](README.md).**
 
