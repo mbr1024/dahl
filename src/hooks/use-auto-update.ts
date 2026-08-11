@@ -4,10 +4,10 @@ import { runUpdateCheck } from "@/services/updater";
 
 /** 启动 N 秒后静默检查更新（开发模式跳过：location 指向 dev server） */
 const CHECK_DELAY_MS = 5000;
-const isDevServer = window.location.protocol === "http:" || window.location.protocol === "https:";
 
 export function useAutoUpdate() {
   const autoCheck = useUpdateStore((s) => s.autoCheck);
+  const isDevServer = window.location.protocol === "http:" || window.location.protocol === "https:";
 
   useEffect(() => {
     if (!autoCheck || isDevServer) return;
