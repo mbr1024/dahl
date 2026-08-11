@@ -74,6 +74,22 @@ The endpoint must return the following structure (Tauri 2 format):
 Once configured, tag-triggered releases get signed automatically by
 [tauri-action](https://github.com/tauri-apps/tauri-action) and uploaded to GitHub Release (draft).
 
+### Artifact signing (important)
+
+- Current artifacts carry only the **minisign updater signature** (verified by the in-app
+  updater); **no macOS notarization / Windows code signing** is configured
+- So first-time installs show the "cannot verify developer" prompt on macOS (right-click →
+  Open) and a SmartScreen warning on Windows — expected for a developer/scaffold audience;
+  proceed manually
+- To distribute to end users without warnings, paid certificates are required:
+  - **macOS**: Apple Developer Program ($99/yr) → set secrets `APPLE_CERTIFICATE`,
+    `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `APPLE_ID`, `APPLE_PASSWORD`,
+    `APPLE_TEAM_ID` (tauri-action picks them up automatically; no workflow change needed)
+  - **Windows**: Authenticode code-signing certificate (OV/EV, $200+/yr) → set secrets
+    `WINDOWS_CERTIFICATE`, `WINDOWS_CERTIFICATE_PASSWORD`
+- Trade-off: open-source tools can stay unsigned indefinitely; add signing when you start
+  commercial distribution
+
 ### Release Steps (maintainers)
 
 Releases are driven by Changesets (see `changesets.yml`):

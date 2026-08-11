@@ -67,6 +67,15 @@ endpoint 需返回如下结构（Tauri 2 格式）：
 
 配置后，打 tag 触发 release 时 [tauri-action](https://github.com/tauri-apps/tauri-action) 会自动签名产物并上传到 GitHub Release（draft）。
 
+### 产物签名说明（重要）
+
+- 当前产物仅带 **minisign 更新签名**（供应用内 updater 验签），**未配置 macOS 公证 / Windows 代码签名**
+- 因此首次安装时 macOS 会提示"无法验证开发者"（需右键 → 打开）、Windows 会触发 SmartScreen 警告——对开发者/脚手架用户属预期行为，可放行继续
+- 若要面向终端用户分发（避免警告），需付费证书并配置：
+  - **macOS**：Apple Developer Program（$99/年）→ 在 Secrets 配置 `APPLE_CERTIFICATE`、`APPLE_CERTIFICATE_PASSWORD`、`APPLE_SIGNING_IDENTITY`、`APPLE_ID`、`APPLE_PASSWORD`、`APPLE_TEAM_ID`（tauri-action 会自动读取并公证，workflow 无需改动）
+  - **Windows**：Authenticode 代码签名证书（OV/EV，$200+/年）→ 在 Secrets 配置 `WINDOWS_CERTIFICATE`、`WINDOWS_CERTIFICATE_PASSWORD`
+- 取舍建议：开发者工具/开源项目可长期不签；一旦开始商业分发再补即可
+
 ### 发布步骤（维护者）
 
 发布流程由 Changesets 自动驱动（见 `changesets.yml`）：
