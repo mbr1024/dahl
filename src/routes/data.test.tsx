@@ -58,6 +58,15 @@ describe("DataPage", () => {
     expect(screen.getByText("Error: HTTP 500")).toBeInTheDocument();
   });
 
+  it("请求成功但数据为空时不渲染详情", async () => {
+    mockFetchRepoInfo.mockResolvedValue(null);
+    renderPage();
+
+    await waitFor(() => expect(mockFetchRepoInfo).toHaveBeenCalledTimes(1));
+    expect(screen.queryByText("tauri-apps/tauri")).not.toBeInTheDocument();
+    expect(screen.queryByText("请求失败")).not.toBeInTheDocument();
+  });
+
   it("点击重取按钮再次请求", async () => {
     mockFetchRepoInfo.mockResolvedValue(repo);
     renderPage();

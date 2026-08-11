@@ -19,7 +19,10 @@ vi.mock("sonner", () => ({ toast: mockToast }));
 
 const makeUpdate = () => ({
   version: "0.3.0",
-  download: vi.fn().mockResolvedValue(undefined),
+  download: vi.fn((onEvent: () => void) => {
+    onEvent();
+    return Promise.resolve(undefined);
+  }),
   install: vi.fn().mockResolvedValue(undefined),
 });
 

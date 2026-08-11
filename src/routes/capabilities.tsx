@@ -87,9 +87,15 @@ export default function CapabilitiesPage() {
 
   /** 剪贴板：写入一段文本 */
   const handleWriteClipboard = async () => {
-    await writeText(t("capabilities.clipboard.content", { time: new Date().toLocaleTimeString() }));
-    setClipboard(await readText());
-    toast.success(t("capabilities.clipboard.written"));
+    try {
+      await writeText(
+        t("capabilities.clipboard.content", { time: new Date().toLocaleTimeString() }),
+      );
+      setClipboard(await readText());
+      toast.success(t("capabilities.clipboard.written"));
+    } catch (e) {
+      toast.error(String(e));
+    }
   };
 
   /** 系统通知 */

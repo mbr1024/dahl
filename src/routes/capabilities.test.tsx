@@ -68,6 +68,7 @@ const renderPage = () =>
 
 describe("CapabilitiesPage", () => {
   beforeEach(() => {
+    mockOnOpenUrl.mockReset();
     mockOnOpenUrl.mockResolvedValue(() => {});
     mockInvoke.mockReset();
     mockOpen.mockReset();
@@ -133,6 +134,20 @@ describe("CapabilitiesPage", () => {
     await waitFor(() => expect(mockToast.success).toHaveBeenCalledWith("读取 note.md：hello dahl"));
   });
 
+  it("文件内容超长时截断提示", async () => {
+    mockOpen.mockResolvedValue("/tmp/big.txt");
+    mockReadTextFile.mockResolvedValue("x".repeat(200));
+    renderPage();
+
+    fireEvent.click(screen.getByRole("button", { name: "选择文件并读取" }));
+
+    await waitFor(() =>
+      expect(mockToast.success).toHaveBeenCalledWith(
+        expect.stringMatching(/^读取 big\.txt：x{60}…$/),
+      ),
+    );
+  });
+
   it("未选择文件时提示", async () => {
     mockOpen.mockResolvedValue(null);
     renderPage();
@@ -191,5 +206,101 @@ describe("CapabilitiesPage", () => {
       expect(mockToast.success).toHaveBeenCalledWith("echo 输出：hello from shell"),
     );
     expect(mockInfo).toHaveBeenCalledWith("shell echo: hello from shell");
+  });
+
+  it("shell 执行失败时 toast 错误", async () => {
+    mockCommandCreate.mockReturnValue({
+      execute: vi.fn().mockRejectedValue(new Error("EACCES")),
+    });
+    renderPage();
+
+    fireEvent.click(screen.getByRole("button", { name: "执行 echo" }));
+
+    await waitFor(() => expect(mockToast.error).toHaveBeenCalledWith("Error: EACCES"));
+  });
+
+  it("读取文件失败时 toast 错误", async () => {
+    mockOpen.mockResolvedValue("/tmp/secret.txt");
+    mockReadTextFile.mockRejectedValue(new Error("permission denied"));
+    renderPage();
+
+    fireEvent.click(screen.getByRole("button", { name: "选择文件并读取" }));
+
+    await waitFor(() => expect(mockToast.error).toHaveBeenCalledWith("Error: permission denied"));
+  });
+
+  it("剪贴板写入失败时 toast 错误", async () => {
+    mockWriteText.mockRejectedValue(new Error("clipboard busy"));
+    renderPage();
+
+    fireEvent.click(screen.getByRole("button", { name: "写入剪贴板" }));
+
+    await waitFor(() => expect(mockToast.error).toHaveBeenCalledWith("Error: clipboard busy"));
+  });
+
+  it("通知权限被拒绝时提示", async () => {
+    mockIsPermissionGranted.mockResolvedValue(false);
+    mockRequestPermission.mockResolvedValue("denied");
+    renderPage();
+
+    fireEvent.click(screen.getByRole("button", { name: "发送通知" }));
+
+    await waitFor(() => expect(mockToast.error).toHaveBeenCalledWith("通知权限被拒绝"));
+    expect(mockSendNotification).not.toHaveBeenCalled();
+  });
+
+  it("通知权限已授予时发送通知", async () => {
+    mockIsPermissionGranted.mockResolvedValue(true);
+    renderPage();
+
+    fireEvent.click(screen.getByRole("button", { name: "发送通知" }));
+
+    await waitFor(() =>
+      expect(mockSendNotification).toHaveBeenCalledWith(expect.objectContaining({ title: "Dahl" })),
+    );
+  });
+
+  it("写入 store 并展示上次写入值", async () => {
+    const store = { set: vi.fn().mockResolvedValue(undefined) };
+    mockLoadStore.mockResolvedValue(store);
+    renderPage();
+
+    fireEvent.click(screen.getByRole("button", { name: "写入当前时间" }));
+
+    await waitFor(() => expect(store.set).toHaveBeenCalledTimes(1));
+    expect(mockToast.success).toHaveBeenCalledWith(
+      expect.stringContaining("已写入 store：lastClickAt"),
+    );
+    expect(screen.getByText(/上次写入：/)).toBeInTheDocument();
+  });
+
+  it("弹出原生消息框", async () => {
+    mockMessage.mockResolvedValue(undefined);
+    renderPage();
+
+    fireEvent.click(screen.getByRole("button", { name: "弹出消息框" }));
+
+    await waitFor(() =>
+      expect(mockMessage).toHaveBeenCalledWith(
+        "对话框/消息框插件工作正常",
+        expect.objectContaining({ kind: "info" }),
+      ),
+    );
+  });
+
+  it("收到深链接时展示并提示", async () => {
+    let callback: ((urls: string[]) => void) | undefined;
+    mockOnOpenUrl.mockImplementation((cb: (urls: string[]) => void) => {
+      callback = cb;
+      return Promise.resolve(() => {});
+    });
+    renderPage();
+    expect(mockOnOpenUrl).toHaveBeenCalledTimes(1);
+
+    callback!(["dahl://hello", "dahl://world"]);
+
+    await waitFor(() => expect(screen.getByText("dahl://hello")).toBeInTheDocument());
+    expect(screen.getByText("dahl://world")).toBeInTheDocument();
+    expect(mockToast.success).toHaveBeenCalledWith("收到深链接：dahl://hello, dahl://world");
   });
 });
