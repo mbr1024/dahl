@@ -2,7 +2,13 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 const zh = {
-  nav: { home: "首页", capabilities: "桌面能力", data: "数据请求", settings: "设置" },
+  nav: {
+    home: "首页",
+    capabilities: "桌面能力",
+    data: "数据请求",
+    todos: "待办",
+    settings: "设置",
+  },
   home: {
     title: "Dahl",
     desc: "Tauri 2 + React 桌面应用脚手架，开箱即用的工程化实践。",
@@ -32,6 +38,25 @@ const zh = {
       title: "关于",
       platform: "平台",
     },
+  },
+  todos: {
+    title: "待办",
+    desc: "SQLite 持久化的完整 CRUD 示例：新建、勾选完成、删除、导出",
+    list: "待办列表",
+    count: "共 {{total}} 项，已完成 {{done}} 项",
+    placeholder: "要做点什么？",
+    add: "添加",
+    delete: "删除",
+    completed: "已完成",
+    markDone: "标记完成",
+    markUndone: "标记未完成",
+    created: "已添加",
+    deleted: "已删除",
+    exported: "已导出到文件",
+    loading: "加载中…",
+    empty: "暂无待办，添加第一条吧",
+    failed: "加载失败：{{error}}",
+    export: "导出 JSON",
   },
   capabilities: {
     title: "桌面能力",
@@ -98,7 +123,13 @@ const zh = {
 };
 
 const en: typeof zh = {
-  nav: { home: "Home", capabilities: "Capabilities", data: "Data", settings: "Settings" },
+  nav: {
+    home: "Home",
+    capabilities: "Capabilities",
+    data: "Data",
+    todos: "Todos",
+    settings: "Settings",
+  },
   home: {
     title: "Dahl",
     desc: "Tauri 2 + React desktop scaffold with production-ready conventions.",
@@ -128,6 +159,25 @@ const en: typeof zh = {
       title: "About",
       platform: "Platform",
     },
+  },
+  todos: {
+    title: "Todos",
+    desc: "A complete CRUD example persisted in SQLite: create, toggle, delete, export",
+    list: "Todo list",
+    count: "{{total}} items, {{done}} done",
+    placeholder: "What needs to be done?",
+    add: "Add",
+    delete: "Delete",
+    completed: "Done",
+    markDone: "Mark as done",
+    markUndone: "Mark as not done",
+    created: "Added",
+    deleted: "Deleted",
+    exported: "Exported to file",
+    loading: "Loading…",
+    empty: "No todos yet — add your first one",
+    failed: "Failed to load: {{error}}",
+    export: "Export JSON",
   },
   capabilities: {
     title: "Capabilities",

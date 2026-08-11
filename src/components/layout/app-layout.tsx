@@ -1,6 +1,16 @@
 import { NavLink, Outlet } from "react-router";
 import { useTranslation } from "react-i18next";
-import { Home, Boxes, Database, Settings, Moon, Sun, MonitorCog, Terminal } from "lucide-react";
+import {
+  Home,
+  Boxes,
+  Database,
+  Settings,
+  Moon,
+  Sun,
+  MonitorCog,
+  Terminal,
+  ListTodo,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSettingsStore, type Theme } from "@/stores/use-settings";
 import { Button } from "@/components/ui/button";
@@ -26,6 +36,7 @@ export default function AppLayout() {
     { to: "/home", label: t("nav.home"), icon: Home },
     { to: "/capabilities", label: t("nav.capabilities"), icon: Boxes },
     { to: "/data", label: t("nav.data"), icon: Database },
+    { to: "/todos", label: t("nav.todos"), icon: ListTodo },
     { to: "/settings", label: t("nav.settings"), icon: Settings },
   ];
 

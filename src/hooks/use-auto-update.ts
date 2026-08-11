@@ -18,5 +18,5 @@ export function useAutoUpdate() {
       });
     }, CHECK_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [autoCheck]);
+  }, [autoCheck, isDevServer]);
 }
