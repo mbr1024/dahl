@@ -5,6 +5,9 @@ import { toast } from "sonner";
 import i18n from "@/i18n";
 import { useUpdateStore } from "@/stores/use-update-store";
 
+/** 下载完成且可安装的 Update（内存缓存：避免点"重启并安装"时重复下载） */
+let cachedUpdate: Update | null = null;
+
 /**
  * 检查并后台下载更新。
  * @param silent 静默模式（自动检查）：不弹"发现新版本/下载中"提示，
@@ -53,6 +56,7 @@ export async function runUpdateCheck(silent: boolean): Promise<void> {
     return;
   }
 
+  cachedUpdate = update;
   store.setStatus("ready");
   toast.success(i18n.t("settings.update.ready", { version: update.version }));
   const granted = await isPermissionGranted().catch(() => false);
@@ -65,21 +69,24 @@ export async function runUpdateCheck(silent: boolean): Promise<void> {
 }
 
 /**
- * 重启并安装已下载的更新（updater 缓存了安装包，install 后应用自动重启）。
+ * 重启并安装已下载的更新：优先复用 runUpdateCheck 下载好的安装包，
+ * 无缓存时才重新检查下载。
  */
 export async function installUpdate(): Promise<void> {
   const store = useUpdateStore.getState();
   try {
-    const update = await check();
+    const update = cachedUpdate ?? (await check());
     if (!update) {
       store.setStatus("up-to-date");
       return;
     }
     store.setStatus("installing");
-    await update.download(() => {});
+    if (!cachedUpdate) {
+      await update.download(() => {});
+    }
     await update.install();
-    // install 只完成安装；restart_app 用"延迟启动器"重启（直接 relaunch 会被
-    // single-instance 让位导致旧版本继续运行）
+    // install 只完成安装；restart_app 先解除 single-instance 锁再重启，
+    // 否则新实例会被让位导致旧版本继续运行
     await invoke("restart_app");
   } catch (e) {
     store.setStatus("ready");
