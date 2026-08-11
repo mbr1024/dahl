@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1
+
+### Patch Changes
+
+- bbd65da: fix: 更新已下载（ready）状态下重复检查更新不再重复下载，直接提示重启安装
+
 ## 0.2.0
 
 ### Minor Changes
