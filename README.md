@@ -89,11 +89,16 @@ pnpm run test:e2e:run     # 已构建过时直接运行（CI 用）
 - Linux 无显示环境需 `xvfb-run`；macOS/Windows 开箱即用
 - 测试代码在 `e2e/`，配置见 `wdio.conf.ts`，类型检查见 `tsconfig.e2e.json`
 
+## 开发向导
+
+从示例到自己的应用（加页面 / 加 Rust 命令 / 接插件 / 清理演示代码）见
+**[docs/WALKTHROUGH.md](docs/WALKTHROUGH.md)**。
+
 ## 覆盖率
 
-单元测试覆盖率由 Vitest v8 统计（`test:coverage`），阈值配置在 `vitest.config.ts`
-（当前为防回退基线，目标 80% 随测试增长逐步上调）；CI 每次 push/PR 都会跑覆盖率并
-上报 [Codecov](https://codecov.io/gh/mbr1024/dahl)（激活后徽章可见）。
+单元测试覆盖率由 Vitest v8 统计（`test:coverage`），当前 ~99%，阈值 95% 配置在
+`vitest.config.ts`（防回退）；CI 每次 push/PR 都会跑覆盖率并上报
+[Codecov](https://codecov.io/gh/mbr1024/dahl)。
 
 ## 目录结构
 

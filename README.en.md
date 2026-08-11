@@ -94,12 +94,16 @@ Notes:
 - On headless Linux use `xvfb-run`; macOS/Windows work out of the box
 - Tests live in `e2e/`, config in `wdio.conf.ts`, type checks in `tsconfig.e2e.json`
 
+## Walkthrough
+
+From demo to your own app (adding pages / Rust commands / plugins, removing demo
+code): see **[docs/WALKTHROUGH.en.md](docs/WALKTHROUGH.en.md)**.
+
 ## Coverage
 
-Unit-test coverage is measured by Vitest v8 (`test:coverage`), with thresholds in
-`vitest.config.ts` (currently a regression floor — the 80% target will be raised
-gradually as tests grow). CI runs coverage on every push/PR and uploads it to
-[Codecov](https://codecov.io/gh/mbr1024/dahl) (badge appears once activated).
+Unit-test coverage is measured by Vitest v8 (`test:coverage`) — currently ~99%, with
+a 95% regression threshold in `vitest.config.ts`. CI runs coverage on every push/PR
+and uploads it to [Codecov](https://app.codecov.io/gh/mbr1024/dahl).
 
 ## Directory Structure
 
