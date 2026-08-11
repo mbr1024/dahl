@@ -47,6 +47,21 @@ describe("runUpdateCheck", () => {
     expect(mockToast.error).toHaveBeenCalledWith("检查更新失败：Error: network down");
   });
 
+  it("已有已下载版本（ready）时不重新检查下载", async () => {
+    useUpdateStore.setState({ status: "ready", version: "0.3.0" });
+
+    await runUpdateCheck(false);
+
+    expect(mockCheck).not.toHaveBeenCalled();
+    expect(useUpdateStore.getState().status).toBe("ready");
+    expect(mockToast.info).toHaveBeenCalledWith("v0.3.0 已下载，重启应用完成更新");
+
+    useUpdateStore.setState({ status: "ready" });
+    mockToast.info.mockClear();
+    await runUpdateCheck(true);
+    expect(mockToast.info).not.toHaveBeenCalled();
+  });
+
   it("静默模式下失败不弹 toast", async () => {
     mockCheck.mockRejectedValue(new Error("network down"));
 

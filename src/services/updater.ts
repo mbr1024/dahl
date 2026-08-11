@@ -11,6 +11,13 @@ import { useUpdateStore } from "@/stores/use-update-store";
  */
 export async function runUpdateCheck(silent: boolean): Promise<void> {
   const store = useUpdateStore.getState();
+  // 已有下载完成的版本时直接提示，避免重复下载
+  if (store.status === "ready") {
+    if (!silent) {
+      toast.info(i18n.t("settings.update.ready", { version: store.version }));
+    }
+    return;
+  }
   store.setStatus("checking");
   store.setError(null);
 
