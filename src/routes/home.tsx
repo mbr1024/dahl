@@ -3,16 +3,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 
 const stack = [
-  { name: "React 19", desc: "UI 框架" },
-  { name: "TypeScript", desc: "类型系统" },
-  { name: "Vite 7", desc: "构建工具" },
-  { name: "Tauri 2", desc: "桌面壳 (Rust)" },
-  { name: "react-router v8", desc: "路由" },
-  { name: "zustand", desc: "客户端状态" },
-  { name: "TanStack Query", desc: "服务端状态" },
-  { name: "Tailwind v4", desc: "原子化样式" },
-  { name: "shadcn/ui", desc: "组件库 (Radix)" },
-  { name: "ESLint + Prettier", desc: "代码规范" },
+  { name: "React 19", descKey: "home.stack.ui" },
+  { name: "TypeScript", descKey: "home.stack.types" },
+  { name: "Vite 7", descKey: "home.stack.build" },
+  { name: "Tauri 2", descKey: "home.stack.desktop" },
+  { name: "react-router v8", descKey: "home.stack.routing" },
+  { name: "zustand", descKey: "home.stack.clientState" },
+  { name: "TanStack Query", descKey: "home.stack.serverState" },
+  { name: "Tailwind v4", descKey: "home.stack.styling" },
+  { name: "shadcn/ui", descKey: "home.stack.components" },
+  { name: "ESLint + Prettier", descKey: "home.stack.quality" },
 ];
 
 export default function HomePage() {
@@ -25,12 +25,12 @@ export default function HomePage() {
       </header>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
-        {stack.map(({ name, desc }) => (
+        {stack.map(({ name, descKey }) => (
           <Card key={name} className="p-4">
             <Badge variant="secondary" className="mb-2">
               {name}
             </Badge>
-            <p className="text-xs text-muted-foreground">{desc}</p>
+            <p className="text-xs text-muted-foreground">{t(descKey)}</p>
           </Card>
         ))}
       </div>
@@ -38,22 +38,20 @@ export default function HomePage() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">{t("home.conventions")}</CardTitle>
-          <CardDescription>新增功能时遵循的目录与职责划分</CardDescription>
+          <CardDescription>{t("home.conventionsDesc")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
           <p>
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/</code>{" "}
-            页面级组件，一个路由一个文件
+            {t("home.routes")}
           </p>
           <p>
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs">components/</code>{" "}
-            可复用组件（ui/ 放 shadcn 生成的，业务组件放自己的目录）
+            {t("home.components")}
           </p>
           <p>
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs">stores/</code> zustand
-            全局状态； <code className="rounded bg-muted px-1.5 py-0.5 text-xs">services/</code>{" "}
-            数据请求封装； <code className="rounded bg-muted px-1.5 py-0.5 text-xs">hooks/</code>{" "}
-            通用 hooks
+            {t("home.state")}
           </p>
         </CardContent>
       </Card>

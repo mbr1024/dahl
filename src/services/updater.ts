@@ -61,10 +61,12 @@ export async function runUpdateCheck(silent: boolean): Promise<void> {
   toast.success(i18n.t("settings.update.ready", { version: update.version }));
   const granted = await isPermissionGranted().catch(() => false);
   if (granted) {
-    sendNotification({
-      title: i18n.t("settings.update.notifyTitle"),
-      body: i18n.t("settings.update.notifyBody", { version: update.version }),
-    });
+    await Promise.resolve(
+      sendNotification({
+        title: i18n.t("settings.update.notifyTitle"),
+        body: i18n.t("settings.update.notifyBody", { version: update.version }),
+      }),
+    ).catch(() => undefined);
   }
 }
 

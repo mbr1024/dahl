@@ -32,6 +32,16 @@ describe("todos service", () => {
     expect(mockDatabaseLoad).toHaveBeenCalledWith("sqlite:dahl.db");
   });
 
+  it("数据库初始化失败后允许下一次调用重试", async () => {
+    const db = makeDb();
+    db.select.mockResolvedValue([]);
+    mockDatabaseLoad.mockRejectedValueOnce(new Error("database unavailable")).mockResolvedValue(db);
+
+    await expect(todos.fetchTodos()).rejects.toThrow("database unavailable");
+    await expect(todos.fetchTodos()).resolves.toEqual([]);
+    expect(mockDatabaseLoad).toHaveBeenCalledTimes(2);
+  });
+
   it("查询结果映射为 done 布尔（排序由 SQL 负责）", async () => {
     const db = makeDb();
     db.select.mockResolvedValue([

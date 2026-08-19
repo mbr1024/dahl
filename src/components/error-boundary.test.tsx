@@ -1,8 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { ErrorBoundary } from "@/components/error-boundary";
+import i18n from "@/i18n";
 
 afterEach(cleanup);
+
+afterEach(() => {
+  void i18n.changeLanguage("zh");
+});
 
 const Boom = ({ message }: { message: string }) => {
   throw new Error(message);

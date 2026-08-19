@@ -7,7 +7,10 @@ export function LanguageSync() {
   const language = useSettingsStore((s) => s.language);
 
   useEffect(() => {
-    void i18n.changeLanguage(language);
+    void i18n.changeLanguage(language).then(() => {
+      document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
+      document.title = i18n.t("app.title");
+    });
   }, [language]);
 
   return null;

@@ -60,11 +60,15 @@ export default function TodosPage() {
   const exportMutation = useMutation({
     mutationFn: async () => {
       const path = await save({ defaultPath: "dahl-todos.json" });
-      if (path) {
-        await writeTextFile(path, await exportTodosJson());
+      if (!path) {
+        return false;
       }
+      await writeTextFile(path, await exportTodosJson());
+      return true;
     },
-    onSuccess: () => toast.success(t("todos.exported")),
+    onSuccess: (exported) => {
+      if (exported) toast.success(t("todos.exported"));
+    },
     onError: (e) => toast.error(String(e)),
   });
 

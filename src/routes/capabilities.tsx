@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { open, message } from "@tauri-apps/plugin-dialog";
 import { readTextFile } from "@tauri-apps/plugin-fs";
@@ -12,12 +12,12 @@ import { load } from "@tauri-apps/plugin-store";
 import { info } from "@tauri-apps/plugin-log";
 import Database from "@tauri-apps/plugin-sql";
 import { Command } from "@tauri-apps/plugin-shell";
-import { onOpenUrl } from "@tauri-apps/plugin-deep-link";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useDeepLinkStore } from "@/stores/use-deep-link-store";
 
 interface SystemInfo {
   os: string;
@@ -67,7 +67,9 @@ export default function CapabilitiesPage() {
     try {
       const file = await open({
         multiple: false,
-        filters: [{ name: "文本", extensions: ["txt", "md", "json", "log"] }],
+        filters: [
+          { name: t("capabilities.file.filterName"), extensions: ["txt", "md", "json", "log"] },
+        ],
       });
       if (typeof file !== "string") {
         toast.info(t("capabilities.file.noFile"));
@@ -100,31 +102,43 @@ export default function CapabilitiesPage() {
 
   /** 系统通知 */
   const handleNotify = async () => {
-    let granted = await isPermissionGranted();
-    if (!granted) granted = (await requestPermission()) === "granted";
-    if (!granted) {
-      toast.error(t("capabilities.notify.denied"));
-      return;
+    try {
+      let granted = await isPermissionGranted();
+      if (!granted) granted = (await requestPermission()) === "granted";
+      if (!granted) {
+        toast.error(t("capabilities.notify.denied"));
+        return;
+      }
+      await sendNotification({
+        title: "Dahl",
+        body: t("capabilities.notify.body"),
+      });
+    } catch (e) {
+      toast.error(String(e));
     }
-    sendNotification({
-      title: "Dahl",
-      body: t("capabilities.notify.body"),
-    });
   };
 
   /** 本地键值存储（store 插件） */
   const handleStore = async () => {
-    const store = await load("demo.json", { autoSave: true });
-    const key = "lastClickAt";
-    const now = new Date().toLocaleTimeString();
-    await store.set(key, now);
-    setStoreValue(now);
-    toast.success(t("capabilities.store.written", { key, value: now }));
+    try {
+      const store = await load("demo.json", { autoSave: true });
+      const key = "lastClickAt";
+      const now = new Date().toLocaleTimeString();
+      await store.set(key, now);
+      setStoreValue(now);
+      toast.success(t("capabilities.store.written", { key, value: now }));
+    } catch (e) {
+      toast.error(String(e));
+    }
   };
 
   /** 原生消息框 */
   const handleMessageBox = async () => {
-    await message(t("capabilities.message.ok"), { title: "Dahl", kind: "info" });
+    try {
+      await message(t("capabilities.message.ok"), { title: "Dahl", kind: "info" });
+    } catch (e) {
+      toast.error(String(e));
+    }
   };
 
   /** SQLite：建表、插入、查询 */
@@ -158,16 +172,7 @@ export default function CapabilitiesPage() {
   };
 
   /** 深链接：监听 dahl:// 唤起事件 */
-  const [deepLinks, setDeepLinks] = useState<string[]>([]);
-  useEffect(() => {
-    const unlisten = onOpenUrl((urls) => {
-      setDeepLinks((prev) => [...urls, ...prev].slice(0, 5));
-      toast.success(t("capabilities.deeplink.received", { urls: urls.join(", ") }));
-    });
-    return () => {
-      void unlisten.then((fn) => fn());
-    };
-  }, []);
+  const deepLinks = useDeepLinkStore((state) => state.urls);
 
   return (
     <div className="space-y-6">

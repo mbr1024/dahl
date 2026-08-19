@@ -13,10 +13,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-const themeOptions: { value: Theme; label: string; desc: string }[] = [
-  { value: "light", label: "浅色", desc: "始终使用浅色主题" },
-  { value: "dark", label: "深色", desc: "始终使用深色主题" },
-  { value: "system", label: "跟随系统", desc: "随系统深浅色自动切换" },
+const themeOptions: { value: Theme; labelKey: string }[] = [
+  { value: "light", labelKey: "settings.theme.light" },
+  { value: "dark", labelKey: "settings.theme.dark" },
+  { value: "system", labelKey: "settings.theme.system" },
 ];
 
 const languageOptions: { value: Language; label: string }[] = [
@@ -48,21 +48,25 @@ export default function SettingsPage() {
       .then(setAutoStart)
       .catch(() => setAutoStart(false))
       .finally(() => setLoading(false));
-    void invoke<{ exe: string; os: string; arch: string }>("system_info").then((info) => {
-      setExePath(info.exe);
-      setPlatform(`${info.os}/${info.arch}`);
-    });
-    void getVersion().then(setVersion);
+    void invoke<{ exe: string; os: string; arch: string }>("system_info")
+      .then((info) => {
+        setExePath(info.exe);
+        setPlatform(`${info.os}/${info.arch}`);
+      })
+      .catch(() => undefined);
+    void getVersion()
+      .then(setVersion)
+      .catch(() => undefined);
   }, []);
 
   const toggleAutoStart = async (checked: boolean) => {
     try {
       if (checked) {
         await enable();
-        toast.success("已开启开机自启");
+        toast.success(t("settings.general.enabled"));
       } else {
         await disable();
-        toast.success("已关闭开机自启");
+        toast.success(t("settings.general.disabled"));
       }
       setAutoStart(checked);
     } catch (e) {
@@ -84,24 +88,22 @@ export default function SettingsPage() {
     <div className="space-y-6">
       <header className="space-y-1">
         <h1 className="text-2xl font-medium">{t("settings.title")}</h1>
-        <p className="text-sm text-muted-foreground">
-          主题（zustand 持久化 + 系统深浅色联动）、语言、开机自启、更新检查。
-        </p>
+        <p className="text-sm text-muted-foreground">{t("settings.desc")}</p>
       </header>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">外观</CardTitle>
-          <CardDescription>选择主题模式，偏好会持久化保存</CardDescription>
+          <CardTitle className="text-base">{t("settings.theme.title")}</CardTitle>
+          <CardDescription>{t("settings.theme.desc")}</CardDescription>
         </CardHeader>
         <CardContent className="flex gap-2">
-          {themeOptions.map(({ value, label }) => (
+          {themeOptions.map(({ value, labelKey }) => (
             <Button
               key={value}
               variant={theme === value ? "default" : "outline"}
               onClick={() => setTheme(value)}
             >
-              {label}
+              {t(labelKey)}
             </Button>
           ))}
         </CardContent>
@@ -110,7 +112,7 @@ export default function SettingsPage() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">{t("settings.language")}</CardTitle>
-          <CardDescription>界面语言（react-i18next）</CardDescription>
+          <CardDescription>{t("settings.languageDesc")}</CardDescription>
         </CardHeader>
         <CardContent className="flex gap-2">
           {languageOptions.map(({ value, label }) => (
@@ -127,14 +129,14 @@ export default function SettingsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">通用</CardTitle>
-          <CardDescription>开机自启由 autostart 插件管理</CardDescription>
+          <CardTitle className="text-base">{t("settings.general.title")}</CardTitle>
+          <CardDescription>{t("settings.general.desc")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="autostart">开机自启</Label>
-              <p className="text-xs text-muted-foreground">登录系统后自动启动应用</p>
+              <Label htmlFor="autostart">{t("settings.general.autoStart")}</Label>
+              <p className="text-xs text-muted-foreground">{t("settings.general.autoStartDesc")}</p>
             </div>
             <Switch
               id="autostart"

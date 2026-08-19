@@ -21,11 +21,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const themeOptions: { value: Theme; label: string; icon: typeof Sun }[] = [
-  { value: "light", label: "浅色", icon: Sun },
-  { value: "dark", label: "深色", icon: Moon },
-  { value: "system", label: "跟随系统", icon: MonitorCog },
+const themeOptions: { value: Theme; labelKey: string; icon: typeof Sun }[] = [
+  { value: "light", labelKey: "settings.theme.light", icon: Sun },
+  { value: "dark", labelKey: "settings.theme.dark", icon: Moon },
+  { value: "system", labelKey: "settings.theme.system", icon: MonitorCog },
 ];
+
+const themeLabelKeys: Record<Theme, string> = {
+  light: "settings.theme.light",
+  dark: "settings.theme.dark",
+  system: "settings.theme.system",
+};
 
 export default function AppLayout() {
   const { t } = useTranslation();
@@ -77,14 +83,16 @@ export default function AppLayout() {
                 ) : (
                   <MonitorCog className="size-4" />
                 )}
-                主题：{themeOptions.find((o) => o.value === theme)?.label}
+                {t("settings.theme.label", {
+                  mode: t(themeLabelKeys[theme]),
+                })}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-40">
-              {themeOptions.map(({ value, label, icon: Icon }) => (
+              {themeOptions.map(({ value, labelKey, icon: Icon }) => (
                 <DropdownMenuItem key={value} onClick={() => setTheme(value)} className="gap-2">
                   <Icon className="size-4" />
-                  {label}
+                  {t(labelKey)}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>

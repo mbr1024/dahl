@@ -1,4 +1,5 @@
 import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
+import { appConfig } from "@/config";
 
 /**
  * 数据请求层。
@@ -23,7 +24,7 @@ export interface RepoInfo {
 }
 
 export async function fetchRepoInfo(owner: string, repo: string): Promise<RepoInfo> {
-  const res = await tauriFetch(`https://api.github.com/repos/${owner}/${repo}`, {
+  const res = await tauriFetch(`${appConfig.githubApiBaseUrl}/repos/${owner}/${repo}`, {
     method: "GET",
     headers: { Accept: "application/vnd.github+json" },
   });

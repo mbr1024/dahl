@@ -16,19 +16,38 @@ export const todosQueryKey = ["todos"] as const;
 
 let dbPromise: Promise<Database> | null = null;
 
+async function migrate(db: Database): Promise<void> {
+  await db.execute(
+    "CREATE TABLE IF NOT EXISTS schema_migrations (version INTEGER PRIMARY KEY NOT NULL)",
+  );
+  const applied = await db.select<{ version: number }[]>(
+    "SELECT version FROM schema_migrations ORDER BY version ASC",
+  );
+  const appliedVersions = new Set((applied ?? []).map(({ version }) => version));
+
+  if (!appliedVersions.has(1)) {
+    await db.execute(
+      "CREATE TABLE IF NOT EXISTS todo_items (" +
+        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        "title TEXT NOT NULL, " +
+        "done INTEGER NOT NULL DEFAULT 0, " +
+        "created_at TEXT NOT NULL)",
+    );
+    await db.execute("INSERT INTO schema_migrations (version) VALUES ($1)", [1]);
+  }
+}
+
 function getDb(): Promise<Database> {
   if (!dbPromise) {
-    dbPromise = Database.load("sqlite:dahl.db").then((db) => {
-      return db
-        .execute(
-          "CREATE TABLE IF NOT EXISTS todo_items (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "title TEXT NOT NULL, " +
-            "done INTEGER NOT NULL DEFAULT 0, " +
-            "created_at TEXT NOT NULL)",
-        )
-        .then(() => db);
-    });
+    dbPromise = Database.load("sqlite:dahl.db")
+      .then(async (db) => {
+        await migrate(db);
+        return db;
+      })
+      .catch((error) => {
+        dbPromise = null;
+        throw error;
+      });
   }
   return dbPromise;
 }

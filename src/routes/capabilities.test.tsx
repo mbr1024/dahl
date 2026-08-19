@@ -18,7 +18,6 @@ const {
   mockInfo,
   mockDatabaseLoad,
   mockCommandCreate,
-  mockOnOpenUrl,
   mockToast,
 } = vi.hoisted(() => ({
   mockInvoke: vi.fn(),
@@ -34,7 +33,6 @@ const {
   mockInfo: vi.fn(),
   mockDatabaseLoad: vi.fn(),
   mockCommandCreate: vi.fn(),
-  mockOnOpenUrl: vi.fn(),
   mockToast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },
 }));
 
@@ -54,7 +52,6 @@ vi.mock("@tauri-apps/plugin-store", () => ({ load: mockLoadStore }));
 vi.mock("@tauri-apps/plugin-log", () => ({ info: mockInfo }));
 vi.mock("@tauri-apps/plugin-sql", () => ({ default: { load: mockDatabaseLoad } }));
 vi.mock("@tauri-apps/plugin-shell", () => ({ Command: { create: mockCommandCreate } }));
-vi.mock("@tauri-apps/plugin-deep-link", () => ({ onOpenUrl: mockOnOpenUrl }));
 vi.mock("sonner", () => ({ toast: mockToast }));
 
 afterEach(cleanup);
@@ -68,8 +65,6 @@ const renderPage = () =>
 
 describe("CapabilitiesPage", () => {
   beforeEach(() => {
-    mockOnOpenUrl.mockReset();
-    mockOnOpenUrl.mockResolvedValue(() => {});
     mockInvoke.mockReset();
     mockOpen.mockReset();
     mockReadTextFile.mockReset();
@@ -260,6 +255,17 @@ describe("CapabilitiesPage", () => {
     );
   });
 
+  it("发送通知失败时 toast 错误", async () => {
+    mockIsPermissionGranted.mockRejectedValue(new Error("notification unavailable"));
+    renderPage();
+
+    fireEvent.click(screen.getByRole("button", { name: "发送通知" }));
+
+    await waitFor(() =>
+      expect(mockToast.error).toHaveBeenCalledWith("Error: notification unavailable"),
+    );
+  });
+
   it("写入 store 并展示上次写入值", async () => {
     const store = { set: vi.fn().mockResolvedValue(undefined) };
     mockLoadStore.mockResolvedValue(store);
@@ -272,6 +278,15 @@ describe("CapabilitiesPage", () => {
       expect.stringContaining("已写入 store：lastClickAt"),
     );
     expect(screen.getByText(/上次写入：/)).toBeInTheDocument();
+  });
+
+  it("写入 store 失败时 toast 错误", async () => {
+    mockLoadStore.mockRejectedValue(new Error("store unavailable"));
+    renderPage();
+
+    fireEvent.click(screen.getByRole("button", { name: "写入当前时间" }));
+
+    await waitFor(() => expect(mockToast.error).toHaveBeenCalledWith("Error: store unavailable"));
   });
 
   it("弹出原生消息框", async () => {
@@ -288,19 +303,12 @@ describe("CapabilitiesPage", () => {
     );
   });
 
-  it("收到深链接时展示并提示", async () => {
-    let callback: ((urls: string[]) => void) | undefined;
-    mockOnOpenUrl.mockImplementation((cb: (urls: string[]) => void) => {
-      callback = cb;
-      return Promise.resolve(() => {});
-    });
+  it("原生消息框失败时 toast 错误", async () => {
+    mockMessage.mockRejectedValue(new Error("dialog unavailable"));
     renderPage();
-    expect(mockOnOpenUrl).toHaveBeenCalledTimes(1);
 
-    callback!(["dahl://hello", "dahl://world"]);
+    fireEvent.click(screen.getByRole("button", { name: "弹出消息框" }));
 
-    await waitFor(() => expect(screen.getByText("dahl://hello")).toBeInTheDocument());
-    expect(screen.getByText("dahl://world")).toBeInTheDocument();
-    expect(mockToast.success).toHaveBeenCalledWith("收到深链接：dahl://hello, dahl://world");
+    await waitFor(() => expect(mockToast.error).toHaveBeenCalledWith("Error: dialog unavailable"));
   });
 });

@@ -140,6 +140,7 @@ describe("TodosPage", () => {
 
     await waitFor(() => expect(mockSave).toHaveBeenCalledTimes(1));
     expect(mockWriteTextFile).not.toHaveBeenCalled();
+    expect(mockToast.success).not.toHaveBeenCalled();
   });
 
   it("空列表时展示空态", async () => {
