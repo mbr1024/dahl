@@ -18,9 +18,10 @@
 - **更新签名**：`updater` 使用 minisign 签名，客户端校验公钥（正式部署步骤见 [docs/DEPLOYMENT.md](../docs/DEPLOYMENT.md)）
 - **CSP**：`tauri.conf.json` 中配置了严格的 Content Security Policy，限制脚本、样式与网络请求来源
 - **测试插件隔离**：WebdriverIO 测试插件仅在 `debug_assertions`（dev 构建）下注册，不会进入 release 产物
+- **全局 Tauri API**：`withGlobalTauri` 为 embedded WebDriver 测试桥接保留；不使用该 E2E 方案的项目应将其关闭
 - **网络**：HTTP 请求默认走 `@tauri-apps/plugin-http`，`capabilities` 中显式约束允许访问的 URL
-- **HTTP 放行范围**：模板 `capabilities/default.json` 放行了 `https://**` 与 `http://**`（演示友好）。
-  生产项目请收窄为实际域名白名单（如 `https://api.example.com/**`），并**移除 `http://**` 明文条目**
+- **HTTP 放行范围**：模板 `capabilities/default.json` 仅放行演示使用的
+  `https://api.github.com/**`。接入自己的服务时替换为实际 HTTPS 域名白名单，并避免加入明文 HTTP。
 
 ## 依赖漏洞
 

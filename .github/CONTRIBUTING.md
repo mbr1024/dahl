@@ -9,8 +9,8 @@
 
 ## 开发环境
 
-- Node.js 22+
-- Rust stable（建议通过 [rustup](https://rustup.rs/) 安装）
+- Node.js 22.12+
+- Rust 1.95.0（通过 [rustup](https://rustup.rs/) 安装，仓库已提供 `rust-toolchain.toml`）
 - 平台依赖：请参考 Tauri 官方 [Prerequisites](https://tauri.app/start/prerequisites/)（macOS 需要 Xcode Command Line Tools；Linux 需要 WebKitGTK 等）
 
 ## 常用命令

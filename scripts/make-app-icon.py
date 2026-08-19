@@ -51,16 +51,3 @@ img.alpha_composite(layer, (off_x, off_y))
 img.save(OUT)
 print(f"app icon saved: {OUT} ({OUT.stat().st_size} bytes)")
 print("symbol bbox:", bbox, "=> 尺寸", w, "x", h)
-
-img.save(OUT)
-print(f"app icon saved: {OUT} ({OUT.stat().st_size} bytes)")
-print("symbol bbox:", bbox, "=> 尺寸", w, "x", h)
-
-img.save(OUT)
-print(f"app icon saved: {OUT} ({OUT.stat().st_size} bytes)")
-print("symbol bbox:", bbox, "=> 尺寸", w, "x", h)
-
-
-img.save(OUT)
-print(f"app icon saved: {OUT} ({OUT.stat().st_size} bytes)")
-print("symbol bbox:", bbox, "=> 尺寸", w, "x", h)

@@ -20,7 +20,7 @@ body:
       label: 复现步骤
       description: 如何复现这个问题？步骤越详细越好。
       placeholder: |
-        1. 运行 `npm run tauri dev`
+        1. 运行 `pnpm run tauri dev`
         2. 点击「桌面能力」页的「系统通知」按钮
         3. 观察到...
     validations:

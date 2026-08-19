@@ -24,9 +24,11 @@ We commit to:
   style, and network sources
 - **Test plugin isolation**: WebdriverIO test plugins are registered only under `debug_assertions`
   (dev builds) and never ship in release artifacts
-- **HTTP allowlist**: the template's `capabilities/default.json` allows `https://**` and
-  `http://**` for demo friendliness. Production projects should narrow it to a real domain
-  allowlist (e.g. `https://api.example.com/**`) and **drop the `http://**` cleartext entry**
+- **Global Tauri API**: `withGlobalTauri` is kept for the embedded WebDriver bridge; projects that
+  do not use this E2E setup should disable it
+- **HTTP allowlist**: the template's `capabilities/default.json` only allows the demo endpoint
+  `https://api.github.com/**`. Replace it with a real HTTPS domain allowlist for your service and
+  avoid adding cleartext HTTP.
 
 ## Dependency Vulnerabilities
 

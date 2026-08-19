@@ -10,8 +10,8 @@ desktop apps — the goal is an "out-of-the-box engineering baseline". We partic
 
 ## Dev Environment
 
-- Node.js 22+
-- Rust stable (via [rustup](https://rustup.rs/))
+- Node.js 22.12+
+- Rust 1.95.0 (via [rustup](https://rustup.rs/); the repository includes `rust-toolchain.toml`)
 - Platform dependencies: see the Tauri [Prerequisites](https://tauri.app/start/prerequisites/)
   (macOS: Xcode Command Line Tools; Linux: WebKitGTK and friends)
 
