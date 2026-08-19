@@ -163,6 +163,6 @@ mod tests {
         static TRAY_ICON: &[u8] = include_bytes!("../icons/tray.png");
         let img = image::load_from_memory(TRAY_ICON).expect("tray.png 解码失败");
         assert!(img.width() > 0 && img.height() > 0, "图标尺寸应大于 0");
-        assert_eq!(img.color().has_alpha(), true, "template 图标需要 alpha 通道");
+        assert!(img.color().has_alpha(), "template 图标需要 alpha 通道");
     }
 }

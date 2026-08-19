@@ -4,9 +4,9 @@
   "version": "0.3.4",
   "identifier": "com.dahl.desktop",
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "pnpm run dev",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "pnpm run build",
     "frontendDist": "../dist"
   },
   "app": {
@@ -19,13 +19,17 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost ws: wss:; object-src 'none'; frame-ancestors 'none'"
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost ws: wss:; object-src 'none'; frame-ancestors 'none'"
     }
   },
   "bundle": {
     "active": true,
     "targets": "all",
     "createUpdaterArtifacts": true,
+    "category": "DeveloperTool",
+    "shortDescription": "Tauri desktop application scaffold",
+    "longDescription": "A production-ready Tauri 2 and React desktop application scaffold.",
+    "copyright": "Copyright (c) 2026 Dahl contributors",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

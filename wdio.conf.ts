@@ -1,9 +1,12 @@
 import path from "node:path";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const binaryExt = process.platform === "win32" ? ".exe" : "";
-const appBinaryPath = path.resolve(__dirname, `./src-tauri/target/debug/dahl${binaryExt}`);
+const packageName = JSON.parse(readFileSync(path.resolve(__dirname, "package.json"), "utf8")).name;
+const binaryName = process.env.TAURI_BINARY_NAME ?? packageName;
+const appBinaryPath = path.resolve(__dirname, `./src-tauri/target/debug/${binaryName}${binaryExt}`);
 
 export const config: WebdriverIO.Config = {
   runner: "local",

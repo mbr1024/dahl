@@ -2,9 +2,18 @@ import { browser, expect } from "@wdio/globals";
 
 /**
  * Dahl 冒烟测试：验证应用启动、路由导航、Rust 命令 invoke、SQLite、i18n。
- * 运行前需先构建 debug 二进制：npm run tauri build -- --debug --no-bundle
+ * 运行前需先构建 debug 二进制：pnpm run tauri build --debug --no-bundle
  */
 describe("Dahl 冒烟测试", () => {
+  before(async () => {
+    await browser.tauri.execute(() => {
+      localStorage.removeItem("settings");
+      localStorage.removeItem("update-settings");
+    });
+    await browser.refresh();
+    await browser.$("h1").waitForDisplayed({ timeout: 10000 });
+  });
+
   it("应用启动并渲染首页", async () => {
     const title = await browser.tauri.execute(() => document.title);
     expect(title).toContain("Dahl");
