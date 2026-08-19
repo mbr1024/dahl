@@ -13,7 +13,7 @@
 
 Tauri 2 + React 19 桌面应用脚手架，集成了 2026 年主流的工程化实践，开箱即用。
 
-> 状态：`0.2.0`。发布与更新流程见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)，变更记录见 [CHANGELOG.md](CHANGELOG.md)。
+> 状态：`0.3.4`。发布与更新流程见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)，变更记录见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 技术栈
 
@@ -39,18 +39,32 @@ pnpm run tauri dev        # 开发（首次编译 Rust 较慢）
 pnpm run tauri build      # 打包安装包
 ```
 
+可复制 `.env.example` 为 `.env`，按需替换数据请求示例的 API 地址和仓库；同时要在
+`src-tauri/capabilities/default.json` 中同步收窄或扩展 HTTP 域名白名单。
+
 ## 改造为新项目
 
-模板默认名字是 `Dahl`。用模板创建自己的项目后，按以下清单改名（degit 拉取后无模板变量替换，需手动改 5 处）：
+模板默认名字是 `Dahl`。用模板创建自己的项目后，按以下清单改名（degit 拉取后无模板变量替换，需手动改以下项目）：
 
-| 要改的项                           | 位置                                                                                                       |
-| ---------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| 包名                               | `package.json` → `name`                                                                                    |
-| Rust 包名                          | `src-tauri/Cargo.toml` → `package.name`                                                                    |
-| 应用名 / 窗口标题                  | `src-tauri/tauri.conf.json` → `productName`、`app.windows[0].title`                                        |
-| 应用唯一标识（决定安装路径/包 ID） | `src-tauri/tauri.conf.json` → `identifier`（如 `com.acme.myapp`）                                          |
-| deep-link scheme                   | `src-tauri/tauri.conf.json` → `plugins.deep-link.identifiers`，同步改 `src-tauri/Info.plist` 的 URL scheme |
-| 应用图标                           | 用 `scripts/make-app-icon.py` 从新图标素材生成 `src-tauri/icons/` 全套（参照脚本顶部说明）                 |
+| 要改的项                           | 位置                                                                                                                 |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| 包名                               | `package.json` → `name`                                                                                              |
+| Rust 包名                          | `src-tauri/Cargo.toml` → `package.name`                                                                              |
+| 应用名 / 窗口标题                  | `src-tauri/tauri.conf.json` → `productName`、`app.windows[0].title`                                                  |
+| 应用唯一标识（决定安装路径/包 ID） | `src-tauri/tauri.conf.json` → `identifier`（如 `com.acme.myapp`）                                                    |
+| deep-link scheme                   | `src-tauri/tauri.conf.json` → `plugins.deep-link.identifiers`，同步改 `src-tauri/Info.plist` 的 URL scheme           |
+| 应用图标                           | 用 `scripts/make-app-icon.py` 从新图标素材生成 `src-tauri/icons/` 全套（参照脚本顶部说明）                           |
+| 更新源（updater endpoint）         | `src-tauri/tauri.conf.json` → `plugins.updater.endpoints`（默认指向模板上游 `mbr1024/dahl`）                         |
+| 发布脚本里的仓库地址               | `.github/workflows/release.yml` → release body 的 CHANGELOG 链接、`fix-updater-manifest` 里的 `repos/<owner>/<repo>` |
+| Issue 讨论入口                     | `.github/ISSUE_TEMPLATE/config.yml` → contact_links URL（默认指向 `mbr1024/dahl/discussions`）                       |
+| 文档中的 endpoint 示例             | `docs/DEPLOYMENT.md` / `docs/DEPLOYMENT.en.md` → `latest.json` 的示例 URL                                            |
+| README 徽章 / degit 链接           | `README.md` / `README.en.md` → CI / Codecov 徽章与 `pnpm dlx degit <owner>/<repo>` 链接                              |
+
+> 运行 `pnpm run identity:check` 可扫描上面这些「仍指向模板上游 `mbr1024/dahl`」的残留引用
+> （模板仓库本身可保留这些引用，作为提示输出；CI 中也会执行，只对真正的字段漂移报错）。
+
+E2E 配置会自动从 `package.json` 读取二进制名称；如果 Rust crate 名称与前端包名不同，运行测试前设置
+`TAURI_BINARY_NAME`。
 
 改完跑 `pnpm run tauri dev` 确认应用名、窗口标题、`dahl://` scheme 均已替换。若更换了 `identifier`，首次运行前建议清除旧 identifier 的配置残留（macOS 的 `~/Library/Application Support/` 下旧目录）。
 
@@ -96,7 +110,7 @@ pnpm run test:e2e:run     # 已构建过时直接运行（CI 用）
 
 ## 覆盖率
 
-单元测试覆盖率由 Vitest v8 统计（`test:coverage`），当前 ~99%，阈值 95% 配置在
+单元测试覆盖率由 Vitest v8 统计（`test:coverage`），当前 ~98%，阈值 95% 配置在
 `vitest.config.ts`（防回退）；CI 每次 push/PR 都会跑覆盖率并上报
 [Codecov](https://codecov.io/gh/mbr1024/dahl)。
 
@@ -140,9 +154,10 @@ docs/                # 部署与运维文档（updater 配置等）
 
 ## 脚手架约定
 
-- **权限**：Tauri 2 默认全拒绝。`clipboard-manager` / `sql` /
-  `shell` / `deep-link` 的 `default` 权限集为空，使用对应 API 时需在
-  `capabilities/` 显式加 `allow-*` 权限（排查：看 `src-tauri/gen/schemas/acl-manifests.json`）
+- **权限**：Tauri 2 默认全拒绝。模板 HTTP 示例只允许访问 `https://api.github.com/**`；生产项目应
+  将其替换成自己的 HTTPS 域名。`clipboard-manager` / `sql` / `shell` / `deep-link` 的
+  `default` 权限集为空，使用对应 API 时需在 `capabilities/` 显式加 `allow-*` 权限（排查：看
+  `src-tauri/gen/schemas/acl-manifests.json`）
 - **托盘**：左键单击切换主窗口显隐，右键菜单可退出；关闭窗口会隐藏到托盘
 - **updater**：以 GitHub Releases 作为更新源（endpoint 指向 `latest.json`），正式签名密钥已配置；
   发布时 CI 自动签名并生成更新清单，完整流程见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)

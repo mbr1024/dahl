@@ -41,13 +41,13 @@ endpoint 需返回如下结构（Tauri 2 格式）：
 
 ```json
 {
-  "version": "0.2.0",
+  "version": "X.Y.Z",
   "notes": "新版本说明",
   "pub_date": "2026-08-08T00:00:00Z",
   "platforms": {
     "darwin-aarch64": {
       "signature": "<minisign 签名 base64>",
-      "url": "https://updates.example.com/dahl/dahl_0.2.0_aarch64.dmg"
+      "url": "https://updates.example.com/dahl/dahl_X.Y.Z_aarch64.dmg"
     },
     "darwin-x86_64": { "signature": "...", "url": "..." },
     "linux-x86_64": { "signature": "...", "url": "..." },
@@ -82,9 +82,9 @@ endpoint 需返回如下结构（Tauri 2 格式）：
 
 1. 合并功能 PR（内含 `pnpm changeset` 生成的变更集，见 [CONTRIBUTING.md](../.github/CONTRIBUTING.md)）
 2. 合并自动生成的 "Version Packages" PR（版本号与 CHANGELOG 更新）
-3. **同步 Rust 侧版本**：`changeset version` 只改 `package.json`，需手动把新版本号同步到
-   `src-tauri/Cargo.toml` 与 `src-tauri/tauri.conf.json`（updater 校验、产物命名均以此为准），并更新 `src-tauri/Cargo.lock`
-4. 打 tag：`git tag v0.2.0 && git push origin v0.2.0`
+3. Changesets workflow 会通过 `pnpm run changeset:version` 自动同步
+   `package.json`、`src-tauri/Cargo.toml`、`src-tauri/tauri.conf.json` 与 `src-tauri/Cargo.lock`
+4. 打 tag：`git tag vX.Y.Z && git push origin vX.Y.Z`
 5. 等待 `Release` workflow 构建三平台产物，在 GitHub Releases 中确认（draft → publish）
 6. 更新服务器上的清单 JSON（可用 CI 或脚本生成）
 
@@ -101,7 +101,7 @@ endpoint 需返回如下结构（Tauri 2 格式）：
 ```bash
 # 在 src-tauri 下构建并签名单个产物
 pnpm run tauri build
-pnpm dlx tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_0.1.0_aarch64.dmg
+pnpm dlx tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_X.Y.Z_aarch64.dmg
 ```
 
 将签名与产物放到本地 HTTP 服务器，临时修改 endpoint 指向本地地址，验证应用内「检查更新」流程。

@@ -49,20 +49,6 @@
 
 ## [Unreleased]
 
-### Added
-
-- 静默自动更新与更新状态指示（示例页 i18n 全覆盖）
-
-### Fixed
-
-- 关于区版本号改为运行时读取（`getVersion`），不再硬编码
-- release 后自动重写 `latest.json` 下载地址（tauri-action 生成的 API URL 匿名访问 403）
-- 补充 `@types/node` 与 `@wdio/types` 显式依赖（pnpm 严格布局下 TS 类型解析）
-
-### Changed
-
-- 包管理器从 npm 迁移至 pnpm；e2e 构建命令适配 pnpm 参数透传（无需 `--`）
-
 ## [0.1.1] - 2026-08-08
 
 ### Removed
@@ -76,7 +62,7 @@
 ### Added
 
 - 正式 release notes 模板（安装包说明 + 签名提示）
-- Vitest 覆盖率统计（`npm run test:coverage`）
+- Vitest 覆盖率统计（`pnpm run test:coverage`）
 - README 快速开始支持 degit 模板分发
 
 ## [0.1.0] - 2026-08-08

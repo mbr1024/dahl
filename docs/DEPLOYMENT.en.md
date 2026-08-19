@@ -47,13 +47,13 @@ The endpoint must return the following structure (Tauri 2 format):
 
 ```json
 {
-  "version": "0.2.0",
+  "version": "X.Y.Z",
   "notes": "Release notes",
   "pub_date": "2026-08-08T00:00:00Z",
   "platforms": {
     "darwin-aarch64": {
       "signature": "<minisign signature base64>",
-      "url": "https://updates.example.com/dahl/dahl_0.2.0_aarch64.dmg"
+      "url": "https://updates.example.com/dahl/dahl_X.Y.Z_aarch64.dmg"
     },
     "darwin-x86_64": { "signature": "...", "url": "..." },
     "linux-x86_64": { "signature": "...", "url": "..." },
@@ -97,10 +97,9 @@ Releases are driven by Changesets (see `changesets.yml`):
 1. Merge feature PRs (each containing a changeset from `pnpm changeset`, see
    [CONTRIBUTING.en.md](../.github/CONTRIBUTING.en.md))
 2. Merge the auto-generated "Version Packages" PR (version + CHANGELOG updates)
-3. **Sync the Rust-side version**: `changeset version` only bumps `package.json` — manually
-   sync the new version into `src-tauri/Cargo.toml` and `src-tauri/tauri.conf.json`
-   (updater verification and artifact naming rely on it), then update `src-tauri/Cargo.lock`
-4. Tag: `git tag v0.2.0 && git push origin v0.2.0`
+3. The Changesets workflow runs `pnpm run changeset:version` and automatically synchronizes
+   `package.json`, `src-tauri/Cargo.toml`, `src-tauri/tauri.conf.json`, and `src-tauri/Cargo.lock`
+4. Tag: `git tag vX.Y.Z && git push origin vX.Y.Z`
 5. Wait for the `Release` workflow to build the 3-platform artifacts; confirm on GitHub
    Releases (draft → publish)
 6. Update the manifest JSON on the update server (via CI or a script)
@@ -110,7 +109,7 @@ Releases are driven by Changesets (see `changesets.yml`):
 ```bash
 # Build and sign a single artifact from src-tauri
 pnpm run tauri build
-pnpm dlx tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_0.1.0_aarch64.dmg
+pnpm dlx tauri signer sign -w ~/.tauri/dahl.key -i src-tauri/target/release/bundle/dmg/dahl_X.Y.Z_aarch64.dmg
 ```
 
 Serve the artifact and signature from a local HTTP server, point the endpoint at it

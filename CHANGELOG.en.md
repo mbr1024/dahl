@@ -49,7 +49,7 @@ automatically by [Changesets](https://github.com/changesets/changesets).
 ### Added
 
 - Formal release notes template (install table + signature notes)
-- Vitest coverage reporting (`npm run test:coverage`)
+- Vitest coverage reporting (`pnpm run test:coverage`)
 - README quick start supports degit template scaffolding
 
 ## [0.1.0] - 2026-08-08

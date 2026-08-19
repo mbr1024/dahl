@@ -13,7 +13,7 @@
 
 A production-ready [Tauri 2](https://tauri.app) + React 19 desktop app scaffold, bundled with the mainstream engineering practices of 2026. Open the box and start building.
 
-> Status: `0.2.0`. Release & update pipeline: [docs/DEPLOYMENT.en.md](docs/DEPLOYMENT.en.md) · Changelog: [CHANGELOG.en.md](CHANGELOG.en.md)
+> Status: `0.3.4`. Release & update pipeline: [docs/DEPLOYMENT.en.md](docs/DEPLOYMENT.en.md) · Changelog: [CHANGELOG.en.md](CHANGELOG.en.md)
 
 ## Tech Stack
 
@@ -39,19 +39,34 @@ pnpm run tauri dev        # dev mode (first Rust compile is slow)
 pnpm run tauri build      # bundle installers
 ```
 
+Copy `.env.example` to `.env` to customize the demo API and repository. Keep the HTTP domain
+allowlist in `src-tauri/capabilities/default.json` synchronized with that choice.
+
 ## Renaming for Your Own Project
 
 The template ships with the placeholder name `Dahl`. When scaffolding your own project,
 rename the following (degit does no variable substitution — 5 manual edits):
 
-| Item                                       | Location                                                                                                  |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| Package name                               | `package.json` → `name`                                                                                   |
-| Rust crate name                            | `src-tauri/Cargo.toml` → `package.name`                                                                   |
-| App name / window title                    | `src-tauri/tauri.conf.json` → `productName`, `app.windows[0].title`                                       |
-| App identifier (install paths / bundle ID) | `src-tauri/tauri.conf.json` → `identifier` (e.g. `com.acme.myapp`)                                        |
-| deep-link scheme                           | `src-tauri/tauri.conf.json` → `plugins.deep-link.identifiers`, also `src-tauri/Info.plist` URL scheme     |
-| App icons                                  | regenerate the full `src-tauri/icons/` set from your artwork with `scripts/make-app-icon.py` (see header) |
+| Item                                       | Location                                                                                                               |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| Package name                               | `package.json` → `name`                                                                                                |
+| Rust crate name                            | `src-tauri/Cargo.toml` → `package.name`                                                                                |
+| App name / window title                    | `src-tauri/tauri.conf.json` → `productName`, `app.windows[0].title`                                                    |
+| App identifier (install paths / bundle ID) | `src-tauri/tauri.conf.json` → `identifier` (e.g. `com.acme.myapp`)                                                     |
+| deep-link scheme                           | `src-tauri/tauri.conf.json` → `plugins.deep-link.identifiers`, also `src-tauri/Info.plist` URL scheme                  |
+| App icons                                  | regenerate the full `src-tauri/icons/` set from your artwork with `scripts/make-app-icon.py` (see header)              |
+| Updater endpoint                           | `src-tauri/tauri.conf.json` → `plugins.updater.endpoints` (defaults to the upstream `mbr1024/dahl`)                    |
+| Release script repo path                   | `.github/workflows/release.yml` → CHANGELOG link in the release body, `repos/<owner>/<repo>` in `fix-updater-manifest` |
+| Issue discussion entry                     | `.github/ISSUE_TEMPLATE/config.yml` → contact_links URL (defaults to `mbr1024/dahl/discussions`)                       |
+| Docs endpoint examples                     | `docs/DEPLOYMENT.md` / `docs/DEPLOYMENT.en.md` → sample `latest.json` URL                                              |
+| README badges / degit link                 | `README.md` / `README.en.md` → CI / Codecov badges and `pnpm dlx degit <owner>/<repo>` link                            |
+
+> Run `pnpm run identity:check` to scan for leftovers that still point at the upstream
+> `mbr1024/dahl` (the template itself may keep these as warnings; CI runs it too and only
+> fails on genuine field drift).
+
+The E2E configuration reads the binary name from `package.json`. If the Rust crate name differs from
+the frontend package name, set `TAURI_BINARY_NAME` before running E2E tests.
 
 Then run `pnpm run tauri dev` and confirm the app name, window title, and `dahl://` scheme
 are all replaced. If you changed the `identifier`, remove config leftovers from the old one
@@ -101,7 +116,7 @@ code): see **[docs/WALKTHROUGH.en.md](docs/WALKTHROUGH.en.md)**.
 
 ## Coverage
 
-Unit-test coverage is measured by Vitest v8 (`test:coverage`) — currently ~99%, with
+Unit-test coverage is measured by Vitest v8 (`test:coverage`) — currently ~98%, with
 a 95% regression threshold in `vitest.config.ts`. CI runs coverage on every push/PR
 and uploads it to [Codecov](https://app.codecov.io/gh/mbr1024/dahl).
 
@@ -147,9 +162,11 @@ Issues and PRs are welcome! Please read [CONTRIBUTING.en.md](.github/CONTRIBUTIN
 
 ## Scaffold Conventions
 
-- **Permissions**: Tauri 2 denies everything by default. `clipboard-manager` /
-  `sql` / `shell` / `deep-link` ship with empty `default` permission sets — add explicit `allow-*`
-  entries in `capabilities/` when using them (debug: see `src-tauri/gen/schemas/acl-manifests.json`)
+- **Permissions**: Tauri 2 denies everything by default. The HTTP example only allows
+  `https://api.github.com/**`; replace it with your own HTTPS API domain in production.
+  `clipboard-manager` / `sql` / `shell` / `deep-link` ship with empty `default` permission sets — add
+  explicit `allow-*` entries in `capabilities/` when using them (debug: see
+  `src-tauri/gen/schemas/acl-manifests.json`)
 - **Tray**: left-click toggles the main window, right-click menu quits; closing the window hides it to the tray
 - **Updater**: GitHub Releases is the update source (endpoint points to `latest.json`); the production
   signing key is configured, and CI signs and generates the update manifest on release — see [docs/DEPLOYMENT.en.md](docs/DEPLOYMENT.en.md)
