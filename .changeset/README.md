@@ -11,4 +11,4 @@ We have a quick list of common questions to get you started engaging with this p
 
 功能改动请执行 `pnpm run changeset`，选择改动类型（major / minor / patch）并填写变更说明。
 合并到 `main` 后，`changesets.yml` 会自动生成 "Version Packages" PR；
-合并该 PR 后版本号与 `CHANGELOG.md` 会同步更新，维护者打 `v*` tag 即可触发三平台构建发布。
+合并该 PR 后版本号、Rust/Tauri 配置与 `CHANGELOG.md` 会同步更新，维护者打 `v*` tag 即可触发三平台构建发布。
