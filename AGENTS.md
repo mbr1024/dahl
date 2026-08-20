@@ -1,53 +1,97 @@
-# AI 代理指南
+# 项目协作说明
 
-## 项目
+这是一份给 AI 和新协作者的项目速记，不替代 `README.md` 和
+`docs/WALKTHROUGH.md`。遇到脚手架约定、改名或发布问题，先看那两份文档；这份文件只记录
+这个仓库最容易踩的坑。
 
-- 本仓库是一个桌面应用脚手架，技术栈：Tauri 2、Rust 1.95.0、React 19、TypeScript、Vite、Tailwind CSS v4、Zustand、TanStack Query、react-i18next。
-- 支持平台为桌面端：macOS、Windows、Linux。虽包含移动端素材，但移动端构建不在支持范围内。
-- 使用 pnpm 10.14.0、Node.js 22.12.0，以及 `.node-version` 和 `rust-toolchain.toml` 中声明的工具链版本。
+## 项目边界
 
-## 编辑前
+Dahl 是 Tauri 2 + React 19 的桌面应用脚手架，支持 macOS、Windows、Linux。移动端图标素材
+只是顺手保留，移动端不是本项目的目标。
 
-- 修改脚手架约定前，先阅读 `README.md` 和 `docs/WALKTHROUGH.md` 的相应章节。
-- 先执行 `git status --short`。不要回退或覆盖工作区中与本任务无关的改动。
-- 改动发布或包元数据时，运行 `pnpm run version:check`。
-- 为脚手架改名生成新应用后，运行 `pnpm run identity:check`。模板仓库在 fork 之前预期会保留部分指向上游的 `mbr1024/dahl` 引用。
+开发环境按仓库文件来：pnpm 10.14.0、Node.js 22.12.0、Rust 1.95.0。Node 版本见
+`.node-version`，Rust 版本见 `rust-toolchain.toml`。
 
-## 源码结构
+常用入口：`pnpm run dev` 只启动前端，`pnpm run tauri:dev` 启动桌面应用，`pnpm run build`
+只构建前端，`pnpm run tauri:build` 打包安装包。
 
-- 页面级组件放在 `src/routes/`，一个路由对应一个文件。
-- 可复用业务组件放在 `src/components/ui/` 之外；`src/components/ui/` 存放 shadcn 生成的组件，不要手改。
-- 共享的 React 行为放在 `src/hooks/`，客户端状态放在 `src/stores/`，数据库与网络访问放在 `src/services/`，小的纯工具函数放在 `src/lib/`。
-- 在 `src/App.tsx` 注册路由，在 `src/components/layout/app-layout.tsx` 注册导航项。
-- 面向用户的文案要同时写入 `src/i18n/index.ts` 的 `zh` 与 `en` 资源。不要在页面或组件 JSX 中硬编码 UI 文案。
-- 通过 `LanguageSync` 保持文档语言与标题同步。
+## 动手前
 
-## Tauri 规则
+先看一眼：
 
-- 每个原生能力都需要 Rust/npm 插件接线，以及在 `src-tauri/capabilities/` 中的显式权限。
-- 保持权限最小化。HTTP 示例仅允许 `https://api.github.com/**`；API 配置变化时同步更新。不要为了方便添加宽泛的 HTTP 或明文 HTTP 访问。
-- Shell 命令放行列表保持在最小范围，命令与参数范围尽可能小。
-- `withGlobalTauri` 目前是嵌入式 WebDriver 桥接所必需。在没有同步更新 E2E 配置前不要移除。
-- deep-link 监听是全局的，位于 `src/hooks/use-deep-link-listener.ts`；URL 列表通过 `src/stores/use-deep-link-store.ts` 暴露。要同时处理 `getCurrent()` 的冷启动 URL 与 `onOpenUrl()` 的后续 URL。
-- Rust 命令注册在 `src-tauri/src/lib.rs`，并返回可序列化、带类型的结果。
+```bash
+git status --short
+```
 
-## 数据与配置
+不要顺手清理、回退或覆盖不属于当前任务的改动。涉及脚手架结构时，先读 README 和 walkthrough
+对应章节；涉及版本号时，最后跑 `pnpm run version:check`。
 
-- 在 `src/services/todos.ts` 中使用参数化 SQL；通过扩展迁移流程来加 schema 变更，不要做一次性改动。
-- 用 TanStack Query 管理服务端/数据库状态，并在变更后使相关 query 失效。
-- 运行时演示 API 值来自 `.env` 变量，见 `.env.example` 说明。绝不提交密钥；`.env` 文件已被忽略。
-- 用 `src/config.ts` 做应用级、基于环境的配置，不要把 URL 或仓库名散落在组件里。
+把 Dahl 改成新应用后，再跑 `pnpm run identity:check`。模板仓库本身会保留一些
+`mbr1024/dahl` 上游链接，这些提示在 fork 之前是正常的。
 
-## 发布与版本
+## 代码放哪
 
-- 用户可见的改动应通过 `pnpm run changeset` 记录变更集。
-- `pnpm run changeset:version` 会通过 `scripts/sync-version.mjs` 同步 `package.json`、`src-tauri/Cargo.toml`、`src-tauri/tauri.conf.json` 与 `src-tauri/Cargo.lock`。
-- 改名后要保持 updater endpoint、deep-link scheme、包名、Rust crate 名、product name、identifier 与图标一致。
-- 签名密钥与各平台公证/代码签名证书属于 CI 密钥，绝不能放进仓库。
+- 页面放 `src/routes/`，一个路由一个文件。
+- 业务组件放 `src/components/`，`src/components/ui/` 是 shadcn 生成目录，除非重新生成组件，不直接改里面的文件。
+- 共用行为放 `src/hooks/`，客户端状态放 `src/stores/`，数据库和网络访问放 `src/services/`，小工具放 `src/lib/`。
+- 路由入口在 `src/App.tsx`，侧边栏在 `src/components/layout/app-layout.tsx`。
+- 用户能看到的文字进 `src/i18n/index.ts`，zh/en 两边一起改。页面 JSX 里不要留下只在一种语言下可见的硬编码文案。
+- `src-tauri/gen/schemas/`、`dist/`、`coverage/`、`logs/` 和 `src-tauri/target/` 都是生成物，不要手改或提交。
 
-## 校验
+## Tauri 这边
 
-编辑后运行相关检查。改动较大时，全部运行：
+新增一个原生能力通常要同时改 npm 插件、Rust 插件注册和 `src-tauri/capabilities/` 权限。
+权限漏了会得到 `not allowed`，权限放宽了则会把安全边界一起放宽。
+
+- HTTP 示例只允许 `https://api.github.com/**`，改 API 配置时同步改 capability；不要为了调试加入泛域名或明文 HTTP。
+- Shell scope 只放行实际要执行的命令和参数。
+- `withGlobalTauri` 是 embedded WebDriver 测试桥接的一部分，不能单独删除。
+- 深链接监听在 `src/hooks/use-deep-link-listener.ts`，收到的 URL 放在 `src/stores/use-deep-link-store.ts`。冷启动看 `getCurrent()`，运行中唤起看 `onOpenUrl()`，两条都不能漏。
+- macOS Dock、托盘和再次启动都应该调用“显示并聚焦”，托盘菜单才使用 toggle。窗口关闭事件目前是隐藏到托盘，不是退出应用。
+- 改 deep-link scheme 时，`src-tauri/tauri.conf.json` 和 macOS 的 `src-tauri/Info.plist` 要一起改。
+- `src-tauri/capabilities/desktop.json` 放桌面专属的 updater、autostart 和 window-state 权限；不要把移动端能力混进来。
+
+## 数据和配置
+
+`src/services/todos.ts` 里的 SQL 都用参数绑定。改表结构要扩展 migration，不要再塞一个只执行一次的
+`CREATE TABLE`。
+
+TanStack Query 负责服务端和数据库状态；新增、删除、切换之后记得让对应 query 失效。演示 API 的
+地址和仓库名从 `.env` / `src/config.ts` 来，示例见 `.env.example`，不要把密钥放进仓库。
+pnpm 的依赖 override 放在 `pnpm-workspace.yaml`，不是 `package.json`。
+
+## 测试习惯
+
+前端单测和被测文件放在一起，文件名用 `*.test.ts(x)`；E2E 用例放在 `e2e/`，文件名用
+`*.spec.ts`。`pnpm run test:e2e` 前先关闭正在运行的 Dahl 实例，single-instance 会让新进程让位给旧进程。
+已有 debug 二进制时用 `pnpm run test:e2e:run`，Linux 无显示环境需要 `xvfb-run`。
+
+## 改名和发版
+
+改名时要一起检查 package name、Rust crate、product name、identifier、deep-link scheme、updater
+endpoint 和图标。E2E 二进制默认从 `package.json` 取名；Rust crate 名不同才需要设置
+`TAURI_BINARY_NAME`。
+
+用户可见的改动带一个 Changeset：
+
+```bash
+pnpm run changeset
+```
+
+`pnpm run changeset:version` 会通过 `scripts/sync-version.mjs` 同步前端、Tauri、Cargo 和
+`Cargo.lock` 的版本。签名私钥、Apple 公证和 Windows 代码签名证书只放 CI Secret。
+
+Changesets workflow 会在 `main` 上生成版本 PR；合并后再推送 `v*` tag，release workflow 才会构建
+三平台安装包。release 默认先建 draft，发布 updater 前要确认 draft 已发布。
+
+## CI 对应关系
+
+普通 push/PR 会检查版本与身份、TypeScript、ESLint、Prettier、Rust fmt/clippy、依赖审计和覆盖率；
+随后在 Linux 上跑 embedded WebDriver E2E 和构建冒烟。三平台完整打包只在 `v*` tag 上运行。
+
+## 交付前
+
+小的前端改动至少跑：
 
 ```bash
 pnpm run version:check
@@ -55,6 +99,12 @@ pnpm run identity:check
 pnpm run typecheck
 pnpm run lint
 pnpm run format:check
+pnpm run test
+```
+
+涉及构建、Rust 或桌面能力时，再补：
+
+```bash
 pnpm run test:coverage
 pnpm run build
 cargo fmt --manifest-path src-tauri/Cargo.toml --all -- --check
@@ -65,6 +115,7 @@ cargo audit
 pnpm run test:e2e
 ```
 
-- `pnpm run test:e2e` 会先构建 debug 二进制；`pnpm run test:e2e:run` 假定它已存在。
-- 不要为让改动通过而降低覆盖率阈值，应新增或更新测试。
-- 除非用户明确要求，否则不要提交、amend 或推送。
+`pnpm run test:e2e` 会先编译 debug 二进制；已有二进制时可以用
+`pnpm run test:e2e:run`。覆盖率阈值不要为了过 CI 而下调，缺什么测试就补什么测试。
+
+提交和推送由任务发起人决定；没有明确要求时，只保留工作区修改。
