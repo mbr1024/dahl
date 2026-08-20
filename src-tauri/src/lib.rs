@@ -30,14 +30,21 @@ fn system_info() -> SystemInfo {
     }
 }
 
+fn show_main_window(app: &tauri::AppHandle) {
+    if let Some(win) = app.get_webview_window("main") {
+        let _ = win.unminimize();
+        let _ = win.show();
+        let _ = win.set_focus();
+    }
+}
+
 fn toggle_main_window(app: &tauri::AppHandle) {
     if let Some(win) = app.get_webview_window("main") {
         let visible = win.is_visible().unwrap_or(true);
         if visible {
             let _ = win.hide();
         } else {
-            let _ = win.show();
-            let _ = win.set_focus();
+            show_main_window(app);
         }
     }
 }
@@ -107,7 +114,7 @@ pub fn run() {
             .plugin(tauri_plugin_wdio::init())
             .plugin(tauri_plugin_wdio_webdriver::init());
     }
-    builder
+    let app = builder
         .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_sql::Builder::new().build())
@@ -116,7 +123,7 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             // 单实例：再次启动时聚焦已有窗口
-            toggle_main_window(app);
+            show_main_window(app);
         }))
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_clipboard_manager::init())
@@ -139,8 +146,20 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![system_info, restart_app])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application");
+
+    app.run(|app, event| {
+        #[cfg(target_os = "macos")]
+        if let tauri::RunEvent::Reopen { .. } = event {
+            // macOS Dock 点击已运行但隐藏的应用时不会触发 single-instance，
+            // 而是发送 Reopen 事件，需要主动显示并聚焦主窗口。
+            show_main_window(app);
+        }
+
+        #[cfg(not(target_os = "macos"))]
+        let _ = (app, event);
+    });
 }
 
 #[cfg(test)]

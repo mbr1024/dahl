@@ -10,6 +10,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -35,14 +37,6 @@
     "*.{css,json,md,html}": [
       "prettier --write"
     ]
-  },
-  "pnpm": {
-    "overrides": {
-      "serialize-javascript": "7.1.0",
-      "@puppeteer/browsers": "3.2.1",
-      "deepmerge-ts": "8.0.1",
-      "@wdio/tauri-service>@wdio/globals": "9.31.1"
-    }
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",

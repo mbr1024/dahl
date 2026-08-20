@@ -1,56 +1,57 @@
-# AI Agent Guide
+# AI 代理指南
 
-## Project
+## 项目
 
-- This repository is a desktop application scaffold built with Tauri 2, Rust 1.95.0, React 19, TypeScript, Vite, Tailwind CSS v4, Zustand, TanStack Query, and react-i18next.
-- The supported platform is desktop: macOS, Windows, and Linux. Mobile assets are present but mobile builds are out of scope.
-- Use pnpm 10.14.0, Node.js 22.12.0, and the toolchain versions in `.node-version` and `rust-toolchain.toml`.
+- 本仓库是一个桌面应用脚手架，技术栈：Tauri 2、Rust 1.95.0、React 19、TypeScript、Vite、Tailwind CSS v4、Zustand、TanStack Query、react-i18next。
+- 支持平台为桌面端：macOS、Windows、Linux。虽包含移动端素材，但移动端构建不在支持范围内。
+- 使用 pnpm 10.14.0、Node.js 22.12.0，以及 `.node-version` 和 `rust-toolchain.toml` 中声明的工具链版本。
 
-## Before Editing
+## 编辑前
 
-- Read the relevant section of `README.md` and `docs/WALKTHROUGH.md` before changing scaffold conventions.
-- Check `git status --short` first. Do not revert or overwrite unrelated worktree changes.
-- Run `pnpm run version:check` when changing release or package metadata.
-- Run `pnpm run identity:check` after renaming the scaffold for a new application. The template repository is expected to retain some `mbr1024/dahl` upstream references until it is forked.
+- 修改脚手架约定前，先阅读 `README.md` 和 `docs/WALKTHROUGH.md` 的相应章节。
+- 先执行 `git status --short`。不要回退或覆盖工作区中与本任务无关的改动。
+- 改动发布或包元数据时，运行 `pnpm run version:check`。
+- 为脚手架改名生成新应用后，运行 `pnpm run identity:check`。模板仓库在 fork 之前预期会保留部分指向上游的 `mbr1024/dahl` 引用。
 
-## Source Layout
+## 源码结构
 
-- Put page-level components in `src/routes/`, one route per file.
-- Put reusable business components outside `src/components/ui/`; `src/components/ui/` contains generated shadcn components and should not be hand-edited.
-- Put shared React behavior in `src/hooks/`, client state in `src/stores/`, database and network access in `src/services/`, and small pure helpers in `src/lib/`.
-- Register routes in `src/App.tsx` and navigation items in `src/components/layout/app-layout.tsx`.
-- Keep user-facing text in both `zh` and `en` resources in `src/i18n/index.ts`. Do not add hardcoded UI copy in page or component JSX.
-- Keep the document language and title synchronized through `LanguageSync`.
+- 页面级组件放在 `src/routes/`，一个路由对应一个文件。
+- 可复用业务组件放在 `src/components/ui/` 之外；`src/components/ui/` 存放 shadcn 生成的组件，不要手改。
+- 共享的 React 行为放在 `src/hooks/`，客户端状态放在 `src/stores/`，数据库与网络访问放在 `src/services/`，小的纯工具函数放在 `src/lib/`。
+- 在 `src/App.tsx` 注册路由，在 `src/components/layout/app-layout.tsx` 注册导航项。
+- 面向用户的文案要同时写入 `src/i18n/index.ts` 的 `zh` 与 `en` 资源。不要在页面或组件 JSX 中硬编码 UI 文案。
+- 通过 `LanguageSync` 保持文档语言与标题同步。
 
-## Tauri Rules
+## Tauri 规则
 
-- Every native capability needs both the Rust/npm plugin wiring and an explicit permission in `src-tauri/capabilities/`.
-- Keep permissions narrow. The HTTP demo is restricted to `https://api.github.com/**`; update it when the API configuration changes. Do not add broad HTTP or cleartext HTTP access for convenience.
-- Keep shell commands allowlisted with the smallest possible command and argument scope.
-- `withGlobalTauri` is currently required by the embedded WebDriver bridge. Do not remove it without updating the E2E setup.
-- Deep-link listening is global in `src/hooks/use-deep-link-listener.ts`; the URL list is exposed through `src/stores/use-deep-link-store.ts`. Handle both cold-start URLs from `getCurrent()` and subsequent URLs from `onOpenUrl()`.
-- Keep Rust commands registered in `src-tauri/src/lib.rs` and return serializable, typed values.
+- 每个原生能力都需要 Rust/npm 插件接线，以及在 `src-tauri/capabilities/` 中的显式权限。
+- 保持权限最小化。HTTP 示例仅允许 `https://api.github.com/**`；API 配置变化时同步更新。不要为了方便添加宽泛的 HTTP 或明文 HTTP 访问。
+- Shell 命令放行列表保持在最小范围，命令与参数范围尽可能小。
+- `withGlobalTauri` 目前是嵌入式 WebDriver 桥接所必需。在没有同步更新 E2E 配置前不要移除。
+- deep-link 监听是全局的，位于 `src/hooks/use-deep-link-listener.ts`；URL 列表通过 `src/stores/use-deep-link-store.ts` 暴露。要同时处理 `getCurrent()` 的冷启动 URL 与 `onOpenUrl()` 的后续 URL。
+- Rust 命令注册在 `src-tauri/src/lib.rs`，并返回可序列化、带类型的结果。
 
-## Data And Configuration
+## 数据与配置
 
-- Use parameterized SQL in `src/services/todos.ts`; extend the migration flow instead of adding one-off schema changes.
-- Use TanStack Query for server/database state and invalidate the relevant query after mutations.
-- Runtime demo API values come from `.env` variables described in `.env.example`. Never commit secrets; `.env` files are ignored.
-- Use `src/config.ts` for app-level environment-backed configuration rather than scattering URLs or repository names through components.
+- 在 `src/services/todos.ts` 中使用参数化 SQL；通过扩展迁移流程来加 schema 变更，不要做一次性改动。
+- 用 TanStack Query 管理服务端/数据库状态，并在变更后使相关 query 失效。
+- 运行时演示 API 值来自 `.env` 变量，见 `.env.example` 说明。绝不提交密钥；`.env` 文件已被忽略。
+- 用 `src/config.ts` 做应用级、基于环境的配置，不要把 URL 或仓库名散落在组件里。
 
-## Release And Versioning
+## 发布与版本
 
-- User-visible changes should include a Changeset via `pnpm run changeset`.
-- `pnpm run changeset:version` synchronizes `package.json`, `src-tauri/Cargo.toml`, `src-tauri/tauri.conf.json`, and `src-tauri/Cargo.lock` through `scripts/sync-version.mjs`.
-- Keep the updater endpoint, deep-link scheme, package name, Rust crate name, product name, identifier, and icons consistent after renaming the scaffold.
-- Signing keys and platform notarization/code-signing certificates belong in CI secrets, never in the repository.
+- 用户可见的改动应通过 `pnpm run changeset` 记录变更集。
+- `pnpm run changeset:version` 会通过 `scripts/sync-version.mjs` 同步 `package.json`、`src-tauri/Cargo.toml`、`src-tauri/tauri.conf.json` 与 `src-tauri/Cargo.lock`。
+- 改名后要保持 updater endpoint、deep-link scheme、包名、Rust crate 名、product name、identifier 与图标一致。
+- 签名密钥与各平台公证/代码签名证书属于 CI 密钥，绝不能放进仓库。
 
-## Validation
+## 校验
 
-Run the relevant checks after edits. For broad changes, run all of these:
+编辑后运行相关检查。改动较大时，全部运行：
 
 ```bash
 pnpm run version:check
+pnpm run identity:check
 pnpm run typecheck
 pnpm run lint
 pnpm run format:check
@@ -64,6 +65,6 @@ cargo audit
 pnpm run test:e2e
 ```
 
-- `pnpm run test:e2e` builds the debug binary first. `pnpm run test:e2e:run` assumes it already exists.
-- Do not lower coverage thresholds to make a change pass. Add or update tests instead.
-- Do not commit, amend, or push unless explicitly requested.
+- `pnpm run test:e2e` 会先构建 debug 二进制；`pnpm run test:e2e:run` 假定它已存在。
+- 不要为让改动通过而降低覆盖率阈值，应新增或更新测试。
+- 除非用户明确要求，否则不要提交、amend 或推送。
